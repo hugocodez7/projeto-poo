@@ -1,4 +1,4 @@
 package br.edu.ifpb.ads.foodjava.exception;
 
-public class CancelamentoNaoPermitidoException {
+public class CancelamentoNaoPermitidoException extends Exception {
 }

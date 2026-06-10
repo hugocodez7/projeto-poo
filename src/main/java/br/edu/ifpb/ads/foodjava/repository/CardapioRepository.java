@@ -19,17 +19,17 @@ public class CardapioRepository implements Persistivel<ItemCardapio> {
 
 
     public void salvar(List<ItemCardapio> lista) {
-        try (FileWriter writer = new FileWriter(CAMINHO)) {
-            gson.toJson(lista, writer);
+        try (FileWriter guardarArquivo = new FileWriter(CAMINHO)) {
+            gson.toJson(lista, guardarArquivo);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public List<ItemCardapio> carregar() {
-        try (FileReader reader = new FileReader(CAMINHO)) {
+        try (FileReader lerArquivo = new FileReader(CAMINHO)) {
             Type tipo = new TypeToken<List<ItemCardapio>>(){}.getType();
-            return gson.fromJson(reader, tipo);
+            return gson.fromJson(lerArquivo, tipo);
         } catch (FileNotFoundException e) {
             return new ArrayList<>();
         } catch (IOException e) {
