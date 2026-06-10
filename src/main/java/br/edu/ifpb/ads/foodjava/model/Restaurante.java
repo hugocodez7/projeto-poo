@@ -7,16 +7,20 @@ public class Restaurante {
     private String telefone;
     private String categoriaCulinaria;
     private String email;
-    private String logoPath;
+    private String logo;
 
-    public Restaurante(String nome, String cnpj, String endereco, String telefone, String categoriaCulinaria, String email, String logoPath) {
+    public Restaurante() {
+
+    }
+
+    public Restaurante(String nome, String cnpj, String endereco, String telefone, String categoriaCulinaria, String email, String logo) {
         this.nome = nome;
         this.cnpj = cnpj;
         this.endereco = endereco;
         this.telefone = telefone;
         this.categoriaCulinaria = categoriaCulinaria;
         this.email = email;
-        this.logoPath = logoPath;
+        this.logo = logo;
     }
 
 
@@ -68,11 +72,11 @@ public class Restaurante {
         this.email = email;
     }
 
-    public String getLogoPath() {
-        return logoPath;
+    public String getLogo() {
+        return logo;
     }
 
-    public void setLogoPath(String logoPath) {
-        this.logoPath = logoPath;
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

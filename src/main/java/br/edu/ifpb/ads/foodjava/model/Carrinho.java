@@ -14,19 +14,14 @@ public class Carrinho {
 
 
     public void adicionarItem(ItemPedido item) {
-
         itens.add(item);
-
     }
 
     public void removerItem(ItemPedido item) {
-
         itens.remove(item);
-
     }
 
     public double calcularTotal() {
-
         double total = 0;
 
         for (ItemPedido item : itens) {
@@ -39,8 +34,6 @@ public class Carrinho {
     public List<ItemPedido> getItens() {
         return itens;
     }
-
-
 }
 
 

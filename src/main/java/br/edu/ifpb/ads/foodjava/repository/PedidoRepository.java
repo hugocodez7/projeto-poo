@@ -1,7 +1,10 @@
 package br.edu.ifpb.ads.foodjava.repository;
 
+import br.edu.ifpb.ads.foodjava.model.Pedido;
 import br.edu.ifpb.ads.foodjava.util.GsonUtil;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -16,17 +19,17 @@ public class PedidoRepository implements Persistivel<Pedido> {
     private Gson gson = GsonUtil.getInstancia();
 
     public void salvar(List<Pedido> lista) {
-        try (FileWriter writer = new FileWriter(CAMINHO)) {
-            gson.toJson(lista, writer);
+        try (FileWriter guardarArquivo = new FileWriter(CAMINHO)) {
+            gson.toJson(lista, guardarArquivo);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public List<Pedido> carregar() {
-        try (FileReader reader = new FileReader(CAMINHO)) {
+        try (FileReader lerArquivo = new FileReader(CAMINHO)) {
             Type tipo = new TypeToken<List<Pedido>>(){}.getType();
-            return gson.fromJson(reader, tipo);
+            return gson.fromJson(lerArquivo, tipo);
         } catch (FileNotFoundException e) {
             return new ArrayList<>();
         } catch (IOException e) {
