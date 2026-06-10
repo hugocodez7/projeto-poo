@@ -1,4 +1,4 @@
 package br.edu.ifpb.ads.foodjava.exception;
 
-public class ItemVinculadoException  {
+public class ItemVinculadoException extends Exception {
 }

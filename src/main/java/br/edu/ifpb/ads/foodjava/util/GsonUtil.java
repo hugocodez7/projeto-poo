@@ -5,9 +5,7 @@ import com.google.gson.GsonBuilder;
 
 public class GsonUtil {
 
-    private static final Gson INSTANCIA = new GsonBuilder()
-            .setPrettyPrinting()
-            .create();
+    private static final Gson INSTANCIA = new GsonBuilder().setPrettyPrinting().create();
 
     public static Gson getInstancia() {
         return INSTANCIA;

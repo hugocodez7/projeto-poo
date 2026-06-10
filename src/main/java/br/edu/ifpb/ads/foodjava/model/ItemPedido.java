@@ -2,18 +2,14 @@ package br.edu.ifpb.ads.foodjava.model;
 
 public class ItemPedido {
 
-
-
     private String nome;
     private int quantidade;
-    private double precoUnitario;
+    private double precoUnidade;
 
-
-    public ItemPedido (String nome, int quantidade, double precoUnitario) {
-
+    public ItemPedido (String nome, int quantidade, double precoUnidade) {
         this.nome = nome;
         this.quantidade = quantidade;
-        this.precoUnitario = precoUnitario;
+        this.precoUnidade = precoUnidade;
     }
 
     public String getNome() {
@@ -24,13 +20,12 @@ public class ItemPedido {
         return quantidade;
     }
 
-    public double getPrecoUnitario() {
-        return precoUnitario;
+    public double getPrecoUnidade() {
+        return precoUnidade;
     }
 
     public double getSubtotal(){
-        return quantidade * precoUnitario;
+        return quantidade * precoUnidade;
     }
-
 
 }

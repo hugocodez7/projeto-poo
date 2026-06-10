@@ -30,14 +30,13 @@ public class CardapioRepository implements Persistivel<ItemCardapio> {
 
     public List<ItemCardapio> carregar() throws ArquivoImportacaoException {
         try (FileReader reader = new FileReader(CAMINHO)) {
-            Type tipo = new TypeToken<List<ItemCardapio>>() {
-            }.getType();
+            Type tipo = new TypeToken<List<ItemCardapio>>(){}.getType();
             return gson.fromJson(reader, tipo);
         } catch (FileNotFoundException e) {
             return new ArrayList<>();
         } catch (JsonSyntaxException e) {
             throw new ArquivoImportacaoException("cardapio.json", e);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return new ArrayList<>();
         }
