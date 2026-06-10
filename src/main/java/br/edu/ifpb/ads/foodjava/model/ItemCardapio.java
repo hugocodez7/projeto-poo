@@ -4,7 +4,7 @@ public class ItemCardapio {
     private String id;
     private String nome;
     private String descricao;
-    private String getCaminhoImagem;
+    private String CaminhoImagem;
     private double preco;
     private Categoria categoria;
     private boolean disponivel;
@@ -13,11 +13,11 @@ public class ItemCardapio {
 
     }
 
-    public ItemCardapio(String id, String nome, String descricao, String getCaminhoImagem, double preco, Categoria categoria, boolean disponivel) {
+    public ItemCardapio(String id, String nome, String descricao, String CaminhoImagem, double preco, Categoria categoria, boolean disponivel) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
-        this.getCaminhoImagem = getCaminhoImagem;
+        this.CaminhoImagem = CaminhoImagem;
         this.preco = preco;
         this.categoria = categoria;
         this.disponivel = disponivel;
@@ -48,12 +48,12 @@ public class ItemCardapio {
         this.descricao = descricao;
     }
 
-    public String getGetCaminhoImagem() {
-        return getCaminhoImagem;
+    public String getCaminhoImagem() {
+        return CaminhoImagem;
     }
 
-    public void setGetCaminhoImagem(String getCaminhoImagem) {
-        this.getCaminhoImagem = getCaminhoImagem;
+    public void setCaminhoImagem(String CaminhoImagem) {
+        this.CaminhoImagem = CaminhoImagem;
     }
 
     public double getPreco() {
@@ -76,15 +76,4 @@ public class ItemCardapio {
         return disponivel;
     }
 
-    @Override
-    public String toString() {
-        return "id='" + id + '\'' +
-                ", nome='" + nome + '\'' +
-                ", descricao='" + descricao + '\'' +
-                ", getCaminhoImagem='" + getCaminhoImagem + '\'' +
-                ", preco=" + preco +
-                ", categoria=" + categoria +
-                ", disponivel=" + disponivel +
-                '}';
-    }
 }

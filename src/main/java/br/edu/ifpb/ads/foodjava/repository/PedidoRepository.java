@@ -1,9 +1,7 @@
 package br.edu.ifpb.ads.foodjava.repository;
 
-import br.edu.ifpb.ads.foodjava.model.ItemCardapio;
 import br.edu.ifpb.ads.foodjava.util.GsonUtil;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -12,13 +10,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardapioRepository implements Persistivel<ItemCardapio> {
+public class PedidoRepository implements Persistivel<Pedido> {
 
-    private static final String CAMINHO = "src/main/resources/data/cardapio.json";
+    private static final String CAMINHO = "src/main/resources/data/pedido.json";
     private Gson gson = GsonUtil.getInstancia();
 
-
-    public void salvar(List<ItemCardapio> lista) {
+    public void salvar(List<Pedido> lista) {
         try (FileWriter writer = new FileWriter(CAMINHO)) {
             gson.toJson(lista, writer);
         } catch (IOException e) {
@@ -26,9 +23,9 @@ public class CardapioRepository implements Persistivel<ItemCardapio> {
         }
     }
 
-    public List<ItemCardapio> carregar() {
+    public List<Pedido> carregar() {
         try (FileReader reader = new FileReader(CAMINHO)) {
-            Type tipo = new TypeToken<List<ItemCardapio>>(){}.getType();
+            Type tipo = new TypeToken<List<Pedido>>(){}.getType();
             return gson.fromJson(reader, tipo);
         } catch (FileNotFoundException e) {
             return new ArrayList<>();
