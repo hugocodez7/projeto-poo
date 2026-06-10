@@ -1,7 +1,11 @@
 package br.edu.ifpb.ads.foodjava.repository;
 
+import br.edu.ifpb.ads.foodjava.exception.ArquivoImportacaoException;
+import br.edu.ifpb.ads.foodjava.model.Pedido;
 import br.edu.ifpb.ads.foodjava.util.GsonUtil;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -23,12 +27,14 @@ public class PedidoRepository implements Persistivel<Pedido> {
         }
     }
 
-    public List<Pedido> carregar() {
+    public List<Pedido> carregar() throws ArquivoImportacaoException {
         try (FileReader reader = new FileReader(CAMINHO)) {
             Type tipo = new TypeToken<List<Pedido>>(){}.getType();
             return gson.fromJson(reader, tipo);
         } catch (FileNotFoundException e) {
             return new ArrayList<>();
+        } catch (JsonSyntaxException e) {
+            throw new ArquivoImportacaoException("pedido.json", e);
         } catch (IOException e) {
             e.printStackTrace();
             return new ArrayList<>();
