@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "nome": "Coca-Cola",
+    "descricao": "Liquido",
+    "preco": 11.99,
+    "categoria": "BEBIDAS",
+    "disponivel": true
+  },
+  {
+    "id": "2",
+    "nome": "Yakisoba",
+    "descricao": "Macarrão chines",
+    "preco": 35.6,
+    "categoria": "PRATO_PRINCIPAL",
+    "disponivel": true
+  }
+]
