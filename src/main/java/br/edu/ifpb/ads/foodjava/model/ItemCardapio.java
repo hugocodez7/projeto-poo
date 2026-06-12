@@ -72,6 +72,10 @@ public class ItemCardapio {
         this.categoria = categoria;
     }
 
+    public void setDisponivel(boolean disponivel) {
+        this.disponivel = disponivel;
+    }
+
     public boolean isDisponivel() {
         return disponivel;
     }
