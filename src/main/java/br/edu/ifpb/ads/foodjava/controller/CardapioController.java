@@ -1,14 +1,21 @@
 package br.edu.ifpb.ads.foodjava.controller;
 
 import br.edu.ifpb.ads.foodjava.exception.ArquivoImportacaoException;
+import br.edu.ifpb.ads.foodjava.exception.ItemNaoEncontradoException;
 import br.edu.ifpb.ads.foodjava.model.ItemCardapio;
 import br.edu.ifpb.ads.foodjava.service.CardapioService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import java.io.IOException;
+import java.util.Optional;
 
 public class CardapioController {
 
@@ -18,9 +25,9 @@ public class CardapioController {
     @FXML private TableColumn<ItemCardapio, Double> colunaPreco;
     @FXML private TableColumn<ItemCardapio, Boolean> colunaDisponivel;
     @FXML private TextField campoBusca;
-    @FXML private Button Adicionar;
-    @FXML private Button Editar;
-    @FXML private Button Remover;
+    @FXML private Button adicionar;
+    @FXML private Button editar;
+    @FXML private Button remover;
 
     private CardapioService cardapioService;
     private ObservableList<ItemCardapio> listaObservavel;
@@ -85,5 +92,86 @@ public class CardapioController {
         });
 
         tabelaCardapio.setItems(listaFiltrada);
+
+        editar.setDisable(true);
+        remover.setDisable(true);
+
+        tabelaCardapio.getSelectionModel().selectedItemProperty().addListener(
+                (obs, itemAntigo, itemNovo) -> {
+                    boolean temSelecao = (itemNovo != null);
+                    editar.setDisable(!temSelecao);
+                    remover.setDisable(!temSelecao);
+                }
+        );
+    }
+
+    @FXML
+    public void abrirFormularioAdicionar() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/itemForm.fxml")
+            );
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Adicionar Item");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            listaObservavel.setAll(cardapioService.listarTodos());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void abrirFormularioEditar() {
+        ItemCardapio selecionado = tabelaCardapio.getSelectionModel().getSelectedItem();
+
+        if (selecionado == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("Slecione um item para editar.");
+            alert.showAndWait();
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/itemForm.fxml"));
+            Parent root = loader.load();
+
+            ItemFormController controller = loader.getController();
+            controller.preencherParaEdicao(selecionado);
+
+            Stage stage = new Stage();
+            stage.setTitle("Editar Item");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            listaObservavel.setAll(cardapioService.listarTodos());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removerItem() throws ItemNaoEncontradoException {
+        ItemCardapio selecionado = tabelaCardapio.getSelectionModel().getSelectedItem();
+
+        if (selecionado == null) {
+            return;
+        }
+
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setContentText("Confirmar remoção");
+        confirmacao.setHeaderText("Remover item?");
+        confirmacao.setContentText("Tem certeza que deseja remover \"" + selecionado.getNome() + "\"?");
+
+        Optional<ButtonType> resultado = confirmacao.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            cardapioService.removerItem(selecionado.getId());
+            listaObservavel.setAll(cardapioService.listarTodos());
+        }
     }
 }
