@@ -1,5 +1,6 @@
 package br.edu.ifpb.ads.foodjava.controller;
 
+import br.edu.ifpb.ads.foodjava.exception.ArquivoImportacaoException;
 import br.edu.ifpb.ads.foodjava.exception.DocumentoInvalidoException;
 import br.edu.ifpb.ads.foodjava.exception.SenhaInvalidaException;
 import br.edu.ifpb.ads.foodjava.exception.UsuarioDuplicadoException;
@@ -20,7 +21,7 @@ public class AuthController {
     }
 
     public void cadastrarCliente(String nome, String email, String senha, String cpf, String telefone, String endereco)
-            throws UsuarioDuplicadoException, SenhaInvalidaException, DocumentoInvalidoException {
+            throws UsuarioDuplicadoException, SenhaInvalidaException, DocumentoInvalidoException, ArquivoImportacaoException {
 
         if (!ValidadorSenha.validar(senha))
             throw new SenhaInvalidaException("Senha deve ter ao menos 8 caracteres e um número");
