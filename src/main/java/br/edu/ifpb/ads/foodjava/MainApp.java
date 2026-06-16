@@ -1,10 +1,9 @@
 package br.edu.ifpb.ads.foodjava;
 
-import br.edu.ifpb.ads.foodjava.repository.RestauranteRepository;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -25,18 +24,14 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        try {
-            RestauranteRepository repo = new RestauranteRepository();
-            String fxml = repo.existe() ? "/fxml/Login.fxml" : "/fxml/ConfiguracaoInicial.fxml";
+        // Tela provisória — substitua pelo carregamento do seu FXML
+        Label label = new Label("FoodJava — ambiente configurado com sucesso!");
+        StackPane root = new StackPane(label);
+        Scene scene = new Scene(root, 800, 500);
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-            Parent root = loader.load();
-            stage.setScene(new Scene(root, 900, 600));
-            stage.setTitle("FoodJava");
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        stage.setTitle("FoodJava");
+        stage.setScene(scene);
+        stage.show();
     }
 
     public static void main(String[] args) {
