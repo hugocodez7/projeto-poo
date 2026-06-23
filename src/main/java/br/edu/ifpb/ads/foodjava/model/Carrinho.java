@@ -2,7 +2,7 @@ package br.edu.ifpb.ads.foodjava.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import br.edu.ifpb.ads.foodjava.exception.CarrinhoVazioException;
 
 public class Carrinho {
 
@@ -34,6 +34,14 @@ public class Carrinho {
     public List<ItemPedido> getItens() {
         return itens;
     }
+
+    public void validarCarrinho() throws CarrinhoVazioException {
+        if (itens.isEmpty()) {
+            throw new CarrinhoVazioException("Não é possível confirmar pedido com carrinho vazio.");
+        }
+    }
+
+
 }
 
 

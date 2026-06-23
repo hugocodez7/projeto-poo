@@ -1,8 +1,9 @@
 package br.edu.ifpb.ads.foodjava.model;
-
+import br.edu.ifpb.ads.foodjava.exception.CancelamentoNaoPermitidoException;
 import java.time.LocalDateTime;
 import java.util.List;
-
+import br.edu.ifpb.ads.foodjava.exception.StatusInvalidoException;
+import br.edu.ifpb.ads.foodjava.exception.CarrinhoVazioException;
 public class Pedido {
 
     private int id;
@@ -11,7 +12,9 @@ public class Pedido {
     private double valorTotal;
     private StatusPedido status;
 
-    public Pedido(int id, Carrinho carrinho) {
+    public Pedido(int id, Carrinho carrinho) throws CarrinhoVazioException {
+        carrinho.validarCarrinho();
+
         this.id = id;
         this.dataHora = LocalDateTime.now();
         this.itens = carrinho.getItens();
@@ -39,35 +42,41 @@ public class Pedido {
         return status;
     }
 
-    public void avancarStatus() {
+    public void avancarStatus() throws StatusInvalidoException {
 
-            switch (status) {
+        switch (status) {
 
-                case AGUARDANDO_CONFIRMACAO:
-                    status = StatusPedido.CONFIRMADO;
-                    break;
+            case AGUARDANDO_CONFIRMACAO:
+                status = StatusPedido.CONFIRMADO;
+                break;
 
-                case CONFIRMADO:
-                    status = StatusPedido.EM_PREPARO;
-                    break;
+            case CONFIRMADO:
+                status = StatusPedido.EM_PREPARO;
+                break;
 
-                case EM_PREPARO:
-                    status = StatusPedido.SAIU_PARA_ENTREGA;
-                    break;
+            case EM_PREPARO:
+                status = StatusPedido.SAIU_PARA_ENTREGA;
+                break;
 
-                case SAIU_PARA_ENTREGA:
-                    status = StatusPedido.ENTREGUE;
-                    break;
+            case SAIU_PARA_ENTREGA:
+                status = StatusPedido.ENTREGUE;
+                break;
 
-                default:
-                    break;
-            }
+            default:
+                throw new StatusInvalidoException(
+                        "Não é possível avançar o status do pedido."
+                );
         }
+    }
 
-    public void cancelarPedido() {
+    public void cancelarPedido() throws CancelamentoNaoPermitidoException {
 
         if (status == StatusPedido.AGUARDANDO_CONFIRMACAO) {
             status = StatusPedido.CANCELADO;
+        } else {
+            throw new CancelamentoNaoPermitidoException(
+                    "O pedido não pode ser cancelado após a confirmação."
+            );
         }
     }
 
