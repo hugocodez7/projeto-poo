@@ -13,6 +13,6 @@ public class Gerente extends Usuario {
 
     public Gerente(long id, String nome, String email, String senha, String telefone) {
         super(id, nome, email, senha, telefone);
+        setTipo(getTipoPerfil());
     }
-
 }

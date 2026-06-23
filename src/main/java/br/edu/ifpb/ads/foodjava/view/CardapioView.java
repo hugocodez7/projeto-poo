@@ -1,23 +1,36 @@
-package br.edu.ifpb.ads.foodjava.service;
+package br.edu.ifpb.ads.foodjava.view;
 
 import br.edu.ifpb.ads.foodjava.exception.ArquivoImportacaoException;
 import br.edu.ifpb.ads.foodjava.exception.ItemNaoEncontradoException;
 import br.edu.ifpb.ads.foodjava.model.Categoria;
 import br.edu.ifpb.ads.foodjava.model.ItemCardapio;
 import br.edu.ifpb.ads.foodjava.repository.CardapioRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CardapioService {
+public class CardapioView {
 
     private CardapioRepository repository;
 
     private List<ItemCardapio> lista;
 
-    public CardapioService() throws ArquivoImportacaoException {
+    public CardapioView() throws ArquivoImportacaoException {
         this.repository = new CardapioRepository();
-        this.lista =  repository.carregar();
+        this.lista = repository.carregar();
+
+        boolean alterou = false;
+        for (ItemCardapio item : lista) {
+            if (item.getId() == null || item.getId().isBlank()) {
+                item.setId(UUID.randomUUID().toString());
+                alterou = true;
+            }
+        }
+
+        if (alterou) {
+            repository.salvar(lista);
+        }
     }
 
     public void adicionarItem(ItemCardapio item) {
@@ -69,8 +82,8 @@ public class CardapioService {
     public List<ItemCardapio> listarPorCategoria(Categoria categoria) {
         List<ItemCardapio> resultado = new ArrayList<>();
 
-        for(ItemCardapio item : lista) {
-            if(item.getCategoria().equals(categoria)) {
+        for (ItemCardapio item : lista) {
+            if (item.getCategoria().equals(categoria)) {
                 resultado.add(item);
             }
         }

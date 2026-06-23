@@ -17,6 +17,7 @@ public class Cliente extends Usuario {
         super(id, nome, email, senha, telefone);
         this.cpf = cpf;
         this.endereco = endereco;
+        setTipo(getTipoPerfil());
     }
 
     public String getCpf() {

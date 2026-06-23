@@ -1,7 +1,7 @@
 package br.edu.ifpb.ads.foodjava.repository;
 
 import br.edu.ifpb.ads.foodjava.exception.ArquivoImportacaoException;
-import br.edu.ifpb.ads.foodjava.model.Cliente;
+import br.edu.ifpb.ads.foodjava.model.Gerente;
 import br.edu.ifpb.ads.foodjava.util.GsonUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -14,12 +14,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteRepository implements Persistivel<Cliente>{
-    private static final String CAMINHO = "src/main/resources/data/cliente.json";
+public class GerenteRepository implements Persistivel<Gerente> {
+    private static final String CAMINHO = "src/main/resources/data/gerente.json";
     private Gson gson = GsonUtil.getInstancia();
 
     @Override
-    public void salvar(List<Cliente> lista) {
+    public void salvar(List<Gerente> lista) {
         try (FileWriter guardarArquivo = new FileWriter(CAMINHO)) {
             GsonUtil.getInstancia().toJson(lista, guardarArquivo);
         } catch (IOException e) {
@@ -28,10 +28,11 @@ public class ClienteRepository implements Persistivel<Cliente>{
     }
 
     @Override
-    public List<Cliente> carregar() throws ArquivoImportacaoException {
+    public List<Gerente> carregar() throws ArquivoImportacaoException {
         try (FileReader lerArquivo = new FileReader(CAMINHO)) {
-            Type tipo = new TypeToken<List<Cliente>>(){}.getType();
-            List<Cliente> lista = GsonUtil.getInstancia().fromJson(lerArquivo, tipo);
+            Type tipo = new TypeToken<List<Gerente>>() {
+            }.getType();
+            List<Gerente> lista = GsonUtil.getInstancia().fromJson(lerArquivo, tipo);
             if (lista == null) {
                 return new ArrayList<>();
             }
@@ -39,30 +40,29 @@ public class ClienteRepository implements Persistivel<Cliente>{
         } catch (FileNotFoundException e) {
             return new ArrayList<>();
         } catch (JsonSyntaxException e) {
-            throw new ArquivoImportacaoException("cliente.json", e);
+            throw new ArquivoImportacaoException("gerente.json", e);
         } catch (IOException e) {
             e.printStackTrace();
             return new ArrayList<>();
         }
     }
 
-    public void salvarCliente(Cliente cliente) throws ArquivoImportacaoException {
-        List<Cliente> lista = carregar();
-        lista.add(cliente);
-        salvar(lista);
+    public Gerente buscarPorEmailESenha(String email, String senha) throws ArquivoImportacaoException {
+        List<Gerente> lista = carregar();
+        for (Gerente gerente : lista) {
+            if (gerente.getEmail().equals(email) &&
+            gerente.getSenha().equals(senha)) {
+                return gerente;
+            }
+        }
+        return null;
     }
 
-    public Cliente buscarPorEmail(String email) throws ArquivoImportacaoException {
-        return carregar().stream()
-                .filter(c -> c.getEmail().equalsIgnoreCase(email))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public Cliente buscarPorCpf(String cpf) throws ArquivoImportacaoException {
-        return carregar().stream()
-                .filter(c -> c.getCpf().equals(cpf))
-                .findFirst()
-                .orElse(null);
+    public Gerente buscarPrimeiro() throws ArquivoImportacaoException {
+        List<Gerente> lista = carregar();
+        if(lista.isEmpty()) {
+            return null;
+        }
+        return lista.getFirst();
     }
 }

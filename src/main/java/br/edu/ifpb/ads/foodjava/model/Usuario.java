@@ -6,6 +6,7 @@ public abstract class Usuario {
     private String email;
     private String senha;
     private String telefone;
+    private String tipo;
 
     public abstract String getTipoPerfil();
 
@@ -59,5 +60,13 @@ public abstract class Usuario {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }
