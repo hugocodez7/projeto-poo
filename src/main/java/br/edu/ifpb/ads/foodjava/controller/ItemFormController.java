@@ -166,7 +166,7 @@ public class ItemFormController {
 
     private void copiarImagem(File arquivoOrigem) {
         try {
-            File pastaDestino = new File("images/cardapio");
+            File pastaDestino = new File("src/main/resources/images/cardapio");
 
             if (!pastaDestino.exists()) {
                 pastaDestino.mkdirs();
@@ -198,14 +198,14 @@ public class ItemFormController {
             Image img;
 
             if (nomeArquivo == null || nomeArquivo.isBlank()) {
-                img = new Image(getClass().getResourceAsStream("/images/placeholder.png"));
+                img = new Image(getClass().getResourceAsStream("src/main/resources/images/placeholder.png"));
             } else {
-                File arquivo = new File("images/cardapio", nomeArquivo);
+                File arquivo = new File("src/main/images/resources/cardapio", nomeArquivo);
 
                 if (arquivo.exists()) {
                     img = new Image(arquivo.toURI().toString());
                 } else {
-                    img = new Image(getClass().getResourceAsStream("/images/placeholder.png"));
+                    img = new Image(getClass().getResourceAsStream("src/main/resources/images/placeholder.png"));
                 }
             }
 
