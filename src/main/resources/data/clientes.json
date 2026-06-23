@@ -6,6 +6,7 @@
     "nome": "Hugo",
     "email": "hugo@email.com",
     "senha": "senha123",
-    "telefone": "99999-9999"
+    "telefone": "99999-9999",
+    "tipo": "CLIENTE"
   }
 ]
