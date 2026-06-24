@@ -5,7 +5,14 @@ import br.edu.ifpb.ads.foodjava.exception.ItemNaoEncontradoException;
 import br.edu.ifpb.ads.foodjava.model.Categoria;
 import br.edu.ifpb.ads.foodjava.model.ItemCardapio;
 import br.edu.ifpb.ads.foodjava.repository.CardapioRepository;
+import br.edu.ifpb.ads.foodjava.util.GsonUtil;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -37,6 +44,26 @@ public class CardapioView {
         item.setId(UUID.randomUUID().toString());
         lista.add(item);
         repository.salvar(lista);
+    }
+
+    public void importarDeArquivo(File arquivo) throws ArquivoImportacaoException {
+        try (FileReader leitor = new FileReader(arquivo)) {
+            Type tipo = new TypeToken<List<ItemCardapio>>(){}.getType();
+            List<ItemCardapio> itensImportados = GsonUtil.getInstancia().fromJson(leitor, tipo);
+
+            if (itensImportados == null || itensImportados.isEmpty()) {
+                throw new ArquivoImportacaoException("O arquivo está vazio ou sem itens válidos.");
+            }
+            for (ItemCardapio item : itensImportados) {
+                item.setId(UUID.randomUUID().toString());
+                lista.add(item);
+            }
+            repository.salvar(lista);
+        } catch (JsonSyntaxException e) {
+            throw new ArquivoImportacaoException("Arquivo JSON inválido ou corrompido.");
+        } catch (IOException e) {
+            throw  new ArquivoImportacaoException("Erro ao ler o arquivo: " + e.getMessage());
+        }
     }
 
     public void removerItem(String id) throws ItemNaoEncontradoException {
