@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GerenteRepository implements Persistivel<Gerente> {
-    private static final String CAMINHO = "src/main/resources/data/gerente.json";
+    private static final String CAMINHO = "src/main/resources/data";
     private Gson gson = GsonUtil.getInstancia();
 
     @Override
