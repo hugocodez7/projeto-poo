@@ -198,14 +198,14 @@ public class ItemFormController {
             Image img;
 
             if (nomeArquivo == null || nomeArquivo.isBlank()) {
-                img = new Image(getClass().getResourceAsStream("src/main/resources/images/placeholder.png"));
+                img = new Image(getClass().getResourceAsStream("/images/placeholder.png"));
             } else {
-                File arquivo = new File("src/main/images/resources/cardapio", nomeArquivo);
+                File arquivo = new File("src/main/resources/images/cardapio", nomeArquivo);
 
                 if (arquivo.exists()) {
                     img = new Image(arquivo.toURI().toString());
                 } else {
-                    img = new Image(getClass().getResourceAsStream("src/main/resources/images/placeholder.png"));
+                    img = new Image(getClass().getResourceAsStream("/images/placeholder.png"));
                 }
             }
 

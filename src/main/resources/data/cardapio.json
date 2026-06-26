@@ -1,26 +1,124 @@
 [
   {
-    "id": "45ab6525-1f54-49d8-8a31-2d73f41e59f5",
-    "nome": "Coca-Cola",
-    "descricao": "Liquido",
-    "preco": 11.99,
-    "categoria": "BEBIDAS",
+    "id": "ccf6f8be-3e77-43fc-a4fe-74a7e339e479",
+    "nome": "Cuscuz Recheado",
+    "descricao": "Um espetacular prato de cuscuz recheado",
+    "CaminhoImagem": "f2a0ed5f-c148-4922-946b-8b6a27cc09cb.jpg",
+    "preco": 25.5,
+    "categoria": "ENTRADA",
     "disponivel": true
   },
   {
-    "id": "5be2b136-1f6f-4bba-8e3f-9e5d701d0e4a",
-    "nome": "Yakisoba",
-    "descricao": "Macarrão chines",
-    "preco": 35.6,
+    "id": "86d34483-b6cd-47ac-ab95-03a0d5d3f9c9",
+    "nome": "Pudim",
+    "descricao": "Uma sobremesa clássica de consistência cremosa",
+    "CaminhoImagem": "ded72fe2-0a76-4d9e-8617-6462645e641e.jpg",
+    "preco": 5.0,
+    "categoria": "SOBREMESA",
+    "disponivel": false
+  },
+  {
+    "id": "38ee3578-ff31-46be-a5bc-1d93ba8a9eae",
+    "nome": "Caldo de Feijão",
+    "descricao": "Caldo temperado com linguiça calabresa, couve manteiga e bacon. Servido bem quente, acompanhado de torradas.",
+    "preco": 12.5,
+    "categoria": "ENTRADA",
+    "disponivel": true
+  },
+  {
+    "id": "922e64a2-1df6-4b62-b560-20a5ed54173b",
+    "nome": "Macaxeira Frita",
+    "descricao": "Macaxeira cozida e frita na hora, crocante por fora e macia por dentro. Servida com manteiga de garrafa.",
+    "preco": 14.0,
+    "categoria": "ENTRADA",
+    "disponivel": true
+  },
+  {
+    "id": "8a43f6b2-9da6-4455-9c6b-9e83a738d4dc",
+    "nome": "Baião de Dois",
+    "descricao": "Prato clássico nordestino com arroz, feijão-verde, queijo coalho, carne-seca desfiada e manteiga de garrafa.",
+    "preco": 38.9,
     "categoria": "PRATO_PRINCIPAL",
     "disponivel": true
   },
   {
-    "id": "d55717d4-ae27-4c90-849e-ed2d1a4f865b",
-    "nome": "bolo",
-    "descricao": "bolo de chocolate com cobertura de chocolate",
-    "preco": 22.0,
-    "categoria": "SOBREMESA",
+    "id": "3890c6b8-418c-420f-abe3-fb91a4ae9261",
+    "nome": "Carne de Sol na Chapa",
+    "descricao": "Carne de sol grelhada na chapa, acompanhada de arroz, feijão, farofa e vinagrete. Porção individual.",
+    "preco": 45.0,
+    "categoria": "PRATO_PRINCIPAL",
+    "disponivel": true
+  },
+  {
+    "id": "3845fe71-77cc-4980-a9df-6bb63010abca",
+    "nome": "Frango Assado Caipira",
+    "descricao": "Frango caipira assado com ervas finas, alho e limão. Acompanha arroz, feijão e salada.",
+    "preco": 42.0,
+    "categoria": "PRATO_PRINCIPAL",
     "disponivel": false
+  },
+  {
+    "id": "998a77d0-c239-468e-8ebe-dc7af837e5c6",
+    "nome": "Moqueca de Camarão",
+    "descricao": "Camarões frescos cozidos em leite de coco, azeite de dendê, tomate e coentro. Acompanha arroz e pirão.",
+    "preco": 62.0,
+    "categoria": "PRATO_PRINCIPAL",
+    "disponivel": true
+  },
+  {
+    "id": "ca875de0-4ef0-4c33-98a8-5bcfef4d6e13",
+    "nome": "Mungunzá",
+    "descricao": "Sobremesa típica nordestina feita com milho branco, leite de coco, canela e açúcar. Servida fria.",
+    "preco": 10.0,
+    "categoria": "SOBREMESA",
+    "disponivel": true
+  },
+  {
+    "id": "2114e178-966c-4169-bae6-f3565db857f1",
+    "nome": "Pudim de Leite Condensado",
+    "descricao": "Pudim cremoso de leite condensado com calda de caramelo. Receita da vovó, feito no dia.",
+    "preco": 12.0,
+    "categoria": "SOBREMESA",
+    "disponivel": true
+  },
+  {
+    "id": "f47512cb-2631-4ab9-9f83-3ea9ca99a8f3",
+    "nome": "Cartola",
+    "descricao": "Banana frita com queijo coalho derretido, polvilhada com açúcar e canela. Sobremesa pernambucana.",
+    "preco": 13.5,
+    "categoria": "SOBREMESA",
+    "disponivel": true
+  },
+  {
+    "id": "e11a7770-a646-4f62-ac8b-5f59fdbb498b",
+    "nome": "Suco de Umbu",
+    "descricao": "Suco natural de umbu, fruta típica do sertão nordestino. Gelado, sem adição de corantes. 500ml.",
+    "preco": 8.0,
+    "categoria": "BEBIDAS",
+    "disponivel": true
+  },
+  {
+    "id": "2fccad13-5e75-430c-9ff4-2d58c7a4381b",
+    "nome": "Suco de Cajá",
+    "descricao": "Suco natural de cajá com gelo, levemente adocicado e com o sabor único da fruta nativa. 500ml.",
+    "preco": 8.0,
+    "categoria": "BEBIDAS",
+    "disponivel": true
+  },
+  {
+    "id": "257358ef-5f24-4d60-b3eb-1ea5066e0f12",
+    "nome": "Água de Coco",
+    "descricao": "Água de coco natural, servida na própria embalagem refrigerada. 330ml.",
+    "preco": 6.0,
+    "categoria": "BEBIDAS",
+    "disponivel": true
+  },
+  {
+    "id": "829e66a1-5da5-43f6-b2ae-37f24c9f98bb",
+    "nome": "Refrigerante Lata",
+    "descricao": "Coca-Cola, Guaraná Antarctica ou Sprite. Informe a preferência no campo de observações do pedido. 350ml.",
+    "preco": 5.5,
+    "categoria": "BEBIDAS",
+    "disponivel": true
   }
 ]
