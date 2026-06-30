@@ -11,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class RestauranteRepository {
-    private static final String CAMINHO = "src/main/resources/data";
+    private static final String CAMINHO = "src/main/resources/data/restaurante.json";
     private Gson gson = GsonUtil.getInstancia();
 
     public void salvar(Restaurante restaurante) {

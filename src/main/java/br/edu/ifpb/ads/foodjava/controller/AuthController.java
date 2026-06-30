@@ -41,13 +41,18 @@ public class AuthController {
     }
 
     public Usuario login(String email, String senha) throws Exception {
-        if (gerente != null && gerente.getEmail().equalsIgnoreCase(email) && gerente.getSenha().equals(senha)) {
+        if (gerente != null && gerente.getEmail().equalsIgnoreCase(email)
+                && gerente.getSenha().equals(senha)) {
             return gerente;
         }
 
-        Cliente cliente = clienteRepository.buscarPorEmail(email);
-        if (cliente != null && cliente.getSenha().equals(senha)) {
-            return cliente;
+        try {
+            Cliente cliente = clienteRepository.buscarPorEmail(email);
+            if (cliente != null && cliente.getSenha().equals(senha)) {
+                return cliente;
+            }
+        } catch (ArquivoImportacaoException e) {
+            throw new Exception("Erro ao acessar dados de clientes");
         }
 
         throw new Exception("E-mail ou senha incorretos");

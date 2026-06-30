@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfiguracaoInicialController {
+public class ConfiguracaoRestauranteController {
 
     @FXML private TextField txNome;
     @FXML private TextField txCnpj;
@@ -26,8 +26,27 @@ public class ConfiguracaoInicialController {
     @FXML private TextField txEmail;
     @FXML private PasswordField txSenha;
     @FXML private Button btnSalvar;
+    @FXML private Button btnVoltar;
 
     private final RestauranteRepository restauranteRepository = new RestauranteRepository();
+    private final GerenteRepository gerenteRepository = new GerenteRepository();
+
+    @FXML
+    public void initialize() {
+        try {
+            Restaurante restaurante = restauranteRepository.carregar();
+            if (restaurante != null) {
+                txNome.setText(restaurante.getNome());
+                txCnpj.setText(restaurante.getCnpj());
+                txEndereco.setText(restaurante.getEndereco());
+                txTelefone.setText(restaurante.getTelefone());
+                txCategoria.setText(restaurante.getCategoriaCulinaria());
+                txEmail.setText(restaurante.getEmail());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     public void salvar() {
@@ -39,9 +58,7 @@ public class ConfiguracaoInicialController {
         String email = txEmail.getText().trim();
         String senha = txSenha.getText().trim();
 
-        if (nome.isEmpty() || cnpj.isEmpty() || endereco.isEmpty()
-                || telefone.isEmpty() || categoria.isEmpty()
-                || email.isEmpty() || senha.isEmpty()) {
+        if (nome.isEmpty() || cnpj.isEmpty() || endereco.isEmpty() || telefone.isEmpty() || categoria.isEmpty() || email.isEmpty()) {
             mostrarErro("Todos os campos são obrigatórios.");
             return;
         }
@@ -51,30 +68,36 @@ public class ConfiguracaoInicialController {
             return;
         }
 
-        if (!ValidadorSenha.validar(senha)) {
-            mostrarErro("Senha deve ter ao menos 8 caracteres e um número.");
-            return;
-        }
-
-
         Restaurante restaurante = new Restaurante(nome, cnpj, endereco, telefone, categoria, email, null);
         restauranteRepository.salvar(restaurante);
 
-        GerenteRepository gerenteRepository = new GerenteRepository();
-        Gerente gerente = new Gerente(1L, nome, email, senha, telefone);
-        List<Gerente> lista = new ArrayList<>();
-        lista.add(gerente);
-        gerenteRepository.salvar(lista);
+        if (!senha.isEmpty()) {
+            if (!ValidadorSenha.validar(senha)) {
+                mostrarErro("Senha deve ter ao menos 8 caracteres e um número.");
+                return;
+            }
+            try {
+                Gerente gerenteAtual = gerenteRepository.buscarPrimeiro();
+                if (gerenteAtual != null) {
+                    Gerente gerenteAtualizado = new Gerente(gerenteAtual.getId(), nome, email, senha, telefone);
+                    List<Gerente> lista = new ArrayList<>();
+                    lista.add(gerenteAtualizado);
+                    gerenteRepository.salvar(lista);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-        mostrarSucesso("Restaurante configurado com sucesso!");
-        irParaLogin();
+        mostrarSucesso("Configurações salvas com sucesso!");
     }
 
-    private void irParaLogin() {
+    @FXML
+    public void voltar() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PainelGerente.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) btnSalvar.getScene().getWindow();
+            Stage stage = (Stage) btnVoltar.getScene().getWindow();
             stage.setScene(new Scene(root, 900, 600));
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,8 +115,8 @@ public class ConfiguracaoInicialController {
     private void mostrarSucesso(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sucesso");
-        alert.setHeaderText(null);alert.setContentText(mensagem);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
         alert.showAndWait();
-
     }
 }
