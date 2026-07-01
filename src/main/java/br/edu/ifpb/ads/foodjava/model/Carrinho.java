@@ -1,8 +1,9 @@
 package br.edu.ifpb.ads.foodjava.model;
 
+import br.edu.ifpb.ads.foodjava.exception.CarrinhoVazioException;
+
 import java.util.ArrayList;
 import java.util.List;
-import br.edu.ifpb.ads.foodjava.exception.CarrinhoVazioException;
 
 public class Carrinho {
 
@@ -11,7 +12,6 @@ public class Carrinho {
     public Carrinho() {
         this.itens = new ArrayList<>();
     }
-
 
     public void adicionarItem(ItemPedido item) {
         itens.add(item);
@@ -41,7 +41,9 @@ public class Carrinho {
         }
     }
 
-
+    public void limpar() {
+        itens.clear();
+    }
 }
 
 

@@ -31,7 +31,14 @@ public class PedidoRepository implements Persistivel<Pedido> {
     public List<Pedido> carregar() throws ArquivoImportacaoException {
         try (FileReader lerArquivo = new FileReader(CAMINHO)) {
             Type tipo = new TypeToken<List<Pedido>>(){}.getType();
-            return gson.fromJson(lerArquivo, tipo);
+            List<Pedido> pedidos = gson.fromJson(lerArquivo, tipo);
+
+            if (pedidos == null) {
+                return new ArrayList<>();
+            }
+
+            return pedidos;
+
         } catch (FileNotFoundException e) {
             return new ArrayList<>();
         } catch (JsonSyntaxException e) {
@@ -40,5 +47,28 @@ public class PedidoRepository implements Persistivel<Pedido> {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    public void adicionar(Pedido pedido) throws ArquivoImportacaoException {
+        List<Pedido> pedidos = carregar();
+        pedidos.add(pedido);
+        salvar(pedidos);
+    }
+
+    public List<Pedido> buscarPorStatus(String status) throws ArquivoImportacaoException {
+        List<Pedido> pedidos = carregar();
+        List<Pedido> resultado = new ArrayList<>();
+
+        for (Pedido pedido : pedidos) {
+            if (pedido.getStatus().name().equalsIgnoreCase(status)) {
+                resultado.add(pedido);
+            }
+        }
+
+        return resultado;
+    }
+
+    public int getTotalPedidos() throws ArquivoImportacaoException {
+        return carregar().size();
     }
 }
