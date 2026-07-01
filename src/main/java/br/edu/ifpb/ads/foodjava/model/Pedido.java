@@ -1,9 +1,13 @@
 package br.edu.ifpb.ads.foodjava.model;
+
 import br.edu.ifpb.ads.foodjava.exception.CancelamentoNaoPermitidoException;
-import java.time.LocalDateTime;
-import java.util.List;
-import br.edu.ifpb.ads.foodjava.exception.StatusInvalidoException;
 import br.edu.ifpb.ads.foodjava.exception.CarrinhoVazioException;
+import br.edu.ifpb.ads.foodjava.exception.StatusInvalidoException;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Pedido {
 
     private int id;
@@ -17,7 +21,7 @@ public class Pedido {
 
         this.id = id;
         this.dataHora = LocalDateTime.now();
-        this.itens = carrinho.getItens();
+        this.itens = new ArrayList<>(carrinho.getItens());
         this.valorTotal = carrinho.calcularTotal();
         this.status = StatusPedido.AGUARDANDO_CONFIRMACAO;
     }
@@ -79,8 +83,6 @@ public class Pedido {
             );
         }
     }
-
-
 }
 
 
