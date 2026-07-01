@@ -6,6 +6,7 @@ import br.edu.ifpb.ads.foodjava.repository.GerenteRepository;
 import br.edu.ifpb.ads.foodjava.repository.RestauranteRepository;
 import br.edu.ifpb.ads.foodjava.util.ValidadorDocumento;
 import br.edu.ifpb.ads.foodjava.util.ValidadorSenha;
+import br.edu.ifpb.ads.foodjava.util.ValidadorTelefone;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,8 +40,7 @@ public class ConfiguracaoInicialController {
         String email = txEmail.getText().trim();
         String senha = txSenha.getText().trim();
 
-        if (nome.isEmpty() || cnpj.isEmpty() || endereco.isEmpty()
-                || telefone.isEmpty() || categoria.isEmpty()
+        if (nome.isEmpty() || cnpj.isEmpty() || endereco.isEmpty() || telefone.isEmpty() || categoria.isEmpty()
                 || email.isEmpty() || senha.isEmpty()) {
             mostrarErro("Todos os campos são obrigatórios.");
             return;
@@ -48,6 +48,11 @@ public class ConfiguracaoInicialController {
 
         if (!ValidadorDocumento.validarCNPJ(cnpj)) {
             mostrarErro("CNPJ inválido.");
+            return;
+        }
+
+        if (!ValidadorTelefone.validar(telefone)) {
+            mostrarErro("Telefone inválido.");
             return;
         }
 

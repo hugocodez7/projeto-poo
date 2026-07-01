@@ -75,8 +75,7 @@ public class LoginController {
 
     private void irParaPainel() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/PainelGerente.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PainelGerente.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) btnEntrar.getScene().getWindow();
             stage.setScene(new Scene(root, 900, 600));
@@ -88,7 +87,7 @@ public class LoginController {
     private void irParaCardapio() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/cardapio.fxml"));
+                    getClass().getResource("/fxml/novaInterfaceCardapio.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) btnEntrar.getScene().getWindow();
             stage.setScene(new Scene(root, 900, 600));
