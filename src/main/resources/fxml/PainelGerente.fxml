@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="br.edu.ifpb.ads.foodjava.controller.PainelGerenteController" prefHeight="600.0"
+            prefWidth="900.0">
+    <top>
+        <VBox>
+            <HBox spacing="15.0" alignment="CENTER_LEFT" style="-fx-background-color: #f5f5f5; -fx-padding: 15;">
+                <Label text="FoodJava" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button text="Cardápio" onAction="#irParaCardapio"/>
+                <Button text="Configurações" onAction="#irParaConfiguracoes"/>
+                <Button fx:id="btnSair" text="Sair" onAction="#sair"/>
+            </HBox>
+            <Separator/>
+        </VBox>
+    </top>
+    <center>
+        <StackPane>
+            <VBox spacing="15.0" maxWidth="760.0" style="-fx-padding: 20;">
+                <Label text="Painel do Gerente" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                    <Label text="Filtrar por status:"/>
+                    <ComboBox fx:id="comboStatus" prefWidth="250.0"/>
+                    <Button text="Filtrar" onAction="#filtrarPedidos"/>
+                    <Button text="Atualizar" onAction="#carregarPedidos"/>
+                </HBox>
+                <TableView fx:id="tabelaPedidos" prefHeight="350.0">
+                    <columns>
+                        <TableColumn fx:id="colId" text="ID" prefWidth="80.0"/>
+                        <TableColumn fx:id="colData" text="Data/Hora" prefWidth="180.0"/>
+                        <TableColumn fx:id="colValor" text="Valor Total" prefWidth="140.0"/>
+                        <TableColumn fx:id="colStatus" text="Status" prefWidth="220.0"/>
+                    </columns>
+                </TableView>
+                <HBox spacing="25.0" alignment="CENTER_LEFT">
+                    <Label fx:id="lblTotalPedidos" text="Total de pedidos: 0"/>
+                    <Label fx:id="lblFaturamento" text="Faturamento: R$ 0,00"/>
+                    <Pane HBox.hgrow="ALWAYS"/>
+                    <Button text="Avançar Status" onAction="#avancarStatus"/>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

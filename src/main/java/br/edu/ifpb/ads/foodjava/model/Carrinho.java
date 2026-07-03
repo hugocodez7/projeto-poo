@@ -7,14 +7,17 @@ import java.util.List;
 
 public class Carrinho {
 
-    private List<ItemPedido> itens;
+    private final List<ItemPedido> itens = new ArrayList<>();
 
-    public Carrinho() {
-        this.itens = new ArrayList<>();
-    }
+    public void adicionarItem(ItemPedido novoItem) {
+        for (ItemPedido item : itens) {
+            if (item.getNome().equals(novoItem.getNome())) {
+                item.aumentarQuantidade();
+                return;
+            }
+        }
 
-    public void adicionarItem(ItemPedido item) {
-        itens.add(item);
+        itens.add(novoItem);
     }
 
     public void removerItem(ItemPedido item) {
@@ -45,7 +48,3 @@ public class Carrinho {
         itens.clear();
     }
 }
-
-
-
-

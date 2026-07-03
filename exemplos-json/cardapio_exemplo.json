@@ -1,5 +1,4 @@
-{
-  "cardapio": [
+[
     {
       "nome": "Caldo de Feijão",
       "descricao": "Caldo temperado com linguiça calabresa, couve manteiga e bacon. Servido bem quente, acompanhado de torradas.",
@@ -100,4 +99,3 @@
       "disponivel": true
     }
   ]
-}

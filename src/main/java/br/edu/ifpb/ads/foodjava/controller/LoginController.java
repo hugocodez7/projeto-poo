@@ -1,10 +1,8 @@
 package br.edu.ifpb.ads.foodjava.controller;
 
-import br.edu.ifpb.ads.foodjava.exception.ArquivoImportacaoException;
 import br.edu.ifpb.ads.foodjava.model.Cliente;
 import br.edu.ifpb.ads.foodjava.model.Gerente;
 import br.edu.ifpb.ads.foodjava.model.Usuario;
-import br.edu.ifpb.ads.foodjava.repository.GerenteRepository;
 import br.edu.ifpb.ads.foodjava.util.Sessao;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,25 +13,16 @@ import javafx.stage.Stage;
 
 public class LoginController {
 
-    @FXML private TextField txEmail;
-    @FXML private PasswordField txSenha;
-    @FXML private Button btnEntrar;
-    @FXML private Button btnCadastrar;
+    @FXML
+    private TextField txEmail;
+    @FXML
+    private PasswordField txSenha;
+    @FXML
+    private Button btnEntrar;
+    @FXML
+    private Button btnCadastrar;
 
     private final AuthController authController = new AuthController();
-
-    @FXML
-    public void initialize() {
-        try {
-            GerenteRepository gerenteRepository = new GerenteRepository();
-            Gerente gerente = gerenteRepository.buscarPrimeiro();
-            if (gerente != null) {
-                authController.setGerente(gerente);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     public void entrar() {
@@ -50,9 +39,9 @@ public class LoginController {
             Sessao.iniciar(usuario);
 
             if (usuario instanceof Gerente) {
-                irParaPainel();
+                trocarTela("/fxml/PainelGerente.fxml", "Painel do Gerente", btnEntrar);
             } else if (usuario instanceof Cliente) {
-                irParaCardapio();
+                trocarTela("/fxml/novaInterfaceCardapio.fxml", "Cardápio", btnEntrar);
             }
 
         } catch (Exception e) {
@@ -62,37 +51,21 @@ public class LoginController {
 
     @FXML
     public void irParaCadastro() {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/CadastroCliente.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) btnCadastrar.getScene().getWindow();
-            stage.setScene(new Scene(root, 900, 600));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        trocarTela("/fxml/CadastroCliente.fxml", "Cadastro", btnCadastrar);
     }
 
-    private void irParaPainel() {
+    private void trocarTela(String caminhoFXML, String titulo, Button botao) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PainelGerente.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(caminhoFXML));
             Parent root = loader.load();
-            Stage stage = (Stage) btnEntrar.getScene().getWindow();
+            Stage stage = (Stage) botao.getScene().getWindow();
             stage.setScene(new Scene(root, 900, 600));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+            stage.setTitle(titulo);
+            stage.show();
 
-    private void irParaCardapio() {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/novaInterfaceCardapio.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) btnEntrar.getScene().getWindow();
-            stage.setScene(new Scene(root, 900, 600));
         } catch (Exception e) {
             e.printStackTrace();
+            mostrarErro("Erro ao abrir tela: " + caminhoFXML);
         }
     }
 

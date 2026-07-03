@@ -6,13 +6,13 @@ import br.edu.ifpb.ads.foodjava.repository.GerenteRepository;
 import br.edu.ifpb.ads.foodjava.repository.RestauranteRepository;
 import br.edu.ifpb.ads.foodjava.util.ValidadorDocumento;
 import br.edu.ifpb.ads.foodjava.util.ValidadorSenha;
+import br.edu.ifpb.ads.foodjava.util.ValidadorTelefone;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,18 +33,15 @@ public class ConfiguracaoRestauranteController {
 
     @FXML
     public void initialize() {
-        try {
-            Restaurante restaurante = restauranteRepository.carregar();
-            if (restaurante != null) {
-                txNome.setText(restaurante.getNome());
-                txCnpj.setText(restaurante.getCnpj());
-                txEndereco.setText(restaurante.getEndereco());
-                txTelefone.setText(restaurante.getTelefone());
-                txCategoria.setText(restaurante.getCategoriaCulinaria());
-                txEmail.setText(restaurante.getEmail());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        Restaurante restaurante = restauranteRepository.carregar();
+
+        if (restaurante != null) {
+            txNome.setText(restaurante.getNome());
+            txCnpj.setText(restaurante.getCnpj());
+            txEndereco.setText(restaurante.getEndereco());
+            txTelefone.setText(restaurante.getTelefone());
+            txCategoria.setText(restaurante.getCategoriaCulinaria());
+            txEmail.setText(restaurante.getEmail());
         }
     }
 
@@ -68,39 +65,64 @@ public class ConfiguracaoRestauranteController {
             return;
         }
 
+        if (!ValidadorTelefone.validar(telefone)) {
+            mostrarErro("Telefone inválido.");
+            return;
+        }
+
+        if (!senha.isEmpty() && !ValidadorSenha.validar(senha)) {
+            mostrarErro("Senha deve ter ao menos 8 caracteres e um número.");
+            return;
+        }
+
         Restaurante restaurante = new Restaurante(nome, cnpj, endereco, telefone, categoria, email, null);
         restauranteRepository.salvar(restaurante);
-
-        if (!senha.isEmpty()) {
-            if (!ValidadorSenha.validar(senha)) {
-                mostrarErro("Senha deve ter ao menos 8 caracteres e um número.");
-                return;
-            }
-            try {
-                Gerente gerenteAtual = gerenteRepository.buscarPrimeiro();
-                if (gerenteAtual != null) {
-                    Gerente gerenteAtualizado = new Gerente(gerenteAtual.getId(), nome, email, senha, telefone);
-                    List<Gerente> lista = new ArrayList<>();
-                    lista.add(gerenteAtualizado);
-                    gerenteRepository.salvar(lista);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        atualizarGerente(nome, email, senha, telefone);
 
         mostrarSucesso("Configurações salvas com sucesso!");
     }
 
-    @FXML
-    public void voltar() {
+    private void atualizarGerente(String nome, String email, String senha, String telefone) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PainelGerente.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) btnVoltar.getScene().getWindow();
-            stage.setScene(new Scene(root, 900, 600));
+            Gerente gerenteAtual = gerenteRepository.buscarPrimeiro();
+
+            if (gerenteAtual == null) {
+                return;
+            }
+
+            String senhaFinal = senha.isEmpty() ? gerenteAtual.getSenha() : senha;
+
+            Gerente gerenteAtualizado = new Gerente(gerenteAtual.getId(), nome, email, senhaFinal, telefone
+            );
+
+            List<Gerente> lista = new ArrayList<>();
+            lista.add(gerenteAtualizado);
+            gerenteRepository.salvar(lista);
+
         } catch (Exception e) {
             e.printStackTrace();
+            mostrarErro("Erro ao atualizar dados do gerente.");
+        }
+    }
+
+    @FXML
+    public void voltar() {
+        trocarTela("/fxml/PainelGerente.fxml", "Painel do Gerente");
+    }
+
+    private void trocarTela(String caminhoFXML, String titulo) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(caminhoFXML));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) btnVoltar.getScene().getWindow();
+            stage.setScene(new Scene(root, 900, 600));
+            stage.setTitle(titulo);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarErro("Erro ao abrir tela: " + caminhoFXML);
         }
     }
 

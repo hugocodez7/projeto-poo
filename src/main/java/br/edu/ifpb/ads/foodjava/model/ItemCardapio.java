@@ -1,27 +1,27 @@
 package br.edu.ifpb.ads.foodjava.model;
 
 public class ItemCardapio {
+
     private String id;
     private String nome;
     private String descricao;
-    private String CaminhoImagem;
+    private String caminhoImagem;
     private double preco;
     private Categoria categoria;
     private boolean disponivel;
 
     public ItemCardapio() {
-
     }
 
-    public ItemCardapio(String id, String nome, String descricao, String CaminhoImagem, double preco, Categoria categoria, boolean disponivel) {
+    public ItemCardapio(String id, String nome, String descricao, String caminhoImagem,
+                        double preco, Categoria categoria, boolean disponivel) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
-        this.CaminhoImagem = CaminhoImagem;
+        this.caminhoImagem = caminhoImagem;
         this.preco = preco;
         this.categoria = categoria;
         this.disponivel = disponivel;
-
     }
 
     public String getId() {
@@ -49,11 +49,11 @@ public class ItemCardapio {
     }
 
     public String getCaminhoImagem() {
-        return CaminhoImagem;
+        return caminhoImagem;
     }
 
-    public void setCaminhoImagem(String CaminhoImagem) {
-        this.CaminhoImagem = CaminhoImagem;
+    public void setCaminhoImagem(String caminhoImagem) {
+        this.caminhoImagem = caminhoImagem;
     }
 
     public double getPreco() {
@@ -72,15 +72,11 @@ public class ItemCardapio {
         this.categoria = categoria;
     }
 
-    public void setDisponivel(boolean disponivel) {
-        this.disponivel = disponivel;
-    }
-
     public boolean isDisponivel() {
         return disponivel;
     }
 
-
-
-
+    public void setDisponivel(boolean disponivel) {
+        this.disponivel = disponivel;
+    }
 }

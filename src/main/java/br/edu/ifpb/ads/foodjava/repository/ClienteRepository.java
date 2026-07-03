@@ -6,22 +6,32 @@ import br.edu.ifpb.ads.foodjava.util.GsonUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteRepository implements Persistivel<Cliente>{
-    private static final String CAMINHO = "src/main/resources/data/cliente.json";
-    private Gson gson = GsonUtil.getInstancia();
+/*
+Vai gerenciar os dados dos clientes.
+Ele carrega a lista do JSON, permite buscar clientes por email ou CPF e salva novos cadastros
+*/
+
+public class ClienteRepository implements Persistivel<Cliente> {
+
+    private static final String CAMINHO = "data/cliente.json";
+    private final Gson gson = GsonUtil.getInstancia();
 
     @Override
     public void salvar(List<Cliente> lista) {
-        try (FileWriter guardarArquivo = new FileWriter(CAMINHO)) {
-            GsonUtil.getInstancia().toJson(lista, guardarArquivo);
+        File arquivo = new File(CAMINHO);
+        File pasta = arquivo.getParentFile();
+
+        if (pasta != null && !pasta.exists()) {
+            pasta.mkdirs();
+        }
+
+        try (FileWriter guardarArquivo = new FileWriter(arquivo)) {
+            gson.toJson(lista, guardarArquivo);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -29,15 +39,23 @@ public class ClienteRepository implements Persistivel<Cliente>{
 
     @Override
     public List<Cliente> carregar() throws ArquivoImportacaoException {
-        try (FileReader lerArquivo = new FileReader(CAMINHO)) {
-            Type tipo = new TypeToken<List<Cliente>>(){}.getType();
-            List<Cliente> lista = GsonUtil.getInstancia().fromJson(lerArquivo, tipo);
+        File arquivo = new File(CAMINHO);
+
+        if (!arquivo.exists()) {
+            return new ArrayList<>();
+        }
+
+        try (FileReader lerArquivo = new FileReader(arquivo)) {
+            Type tipo = new TypeToken<List<Cliente>>() {}.getType();
+
+            List<Cliente> lista = gson.fromJson(lerArquivo, tipo);
+
             if (lista == null) {
                 return new ArrayList<>();
             }
+
             return lista;
-        } catch (FileNotFoundException e) {
-            return new ArrayList<>();
+
         } catch (JsonSyntaxException e) {
             throw new ArquivoImportacaoException("cliente.json", e);
         } catch (IOException e) {
@@ -53,16 +71,29 @@ public class ClienteRepository implements Persistivel<Cliente>{
     }
 
     public Cliente buscarPorEmail(String email) throws ArquivoImportacaoException {
-        return carregar().stream()
-                .filter(c -> c.getEmail().equalsIgnoreCase(email))
-                .findFirst()
-                .orElse(null);
+        List<Cliente> lista = carregar();
+
+        for (Cliente cliente : lista) {
+            if (cliente.getEmail().equalsIgnoreCase(email)) {
+                return cliente;
+            }
+        }
+
+        return null;
     }
 
     public Cliente buscarPorCpf(String cpf) throws ArquivoImportacaoException {
-        return carregar().stream()
-                .filter(c -> c.getCpf().equals(cpf))
-                .findFirst()
-                .orElse(null);
+        String cpfLimpo = cpf.replaceAll("[^0-9]", "");
+        List<Cliente> lista = carregar();
+
+        for (Cliente cliente : lista) {
+            String cpfCliente = cliente.getCpf().replaceAll("[^0-9]", "");
+
+            if (cpfCliente.equals(cpfLimpo)) {
+                return cliente;
+            }
+        }
+
+        return null;
     }
 }

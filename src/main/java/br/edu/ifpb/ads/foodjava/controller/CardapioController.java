@@ -4,8 +4,9 @@ import br.edu.ifpb.ads.foodjava.exception.ArquivoImportacaoException;
 import br.edu.ifpb.ads.foodjava.exception.ItemNaoEncontradoException;
 import br.edu.ifpb.ads.foodjava.model.ItemCardapio;
 import br.edu.ifpb.ads.foodjava.model.Usuario;
-import br.edu.ifpb.ads.foodjava.view.CardapioView;
+import br.edu.ifpb.ads.foodjava.service.CarrinhoService;
 import br.edu.ifpb.ads.foodjava.util.Sessao;
+import br.edu.ifpb.ads.foodjava.service.CardapioService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -18,6 +19,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,45 +39,79 @@ public class CardapioController {
     private Button remover;
     @FXML
     private Button importar;
+    @FXML
+    private Button btnCarrinho;
 
     private ItemCardapio itemSelecionado;
     private VBox cardSelecionadoVisual;
     private List<ItemCardapio> itens;
-    private CardapioView cardapioView;
+    private CardapioService cardapioService;
+    private final CarrinhoService carrinhoService = new CarrinhoService();
 
     @FXML
     public void initialize() {
         try {
-            cardapioView = new CardapioView();
+            cardapioService = new CardapioService();
 
             controleDeAcesso();
-
             popularCards(itens);
 
-            campoBusca.textProperty().addListener((obs, antes, depois) -> {
-                if (depois == null || depois.trim().isEmpty()) {
-                    popularCards(itens);
-                    return;
-                }
-
-                String busca = depois.toLowerCase().trim();
-                List<ItemCardapio> filtrados = new ArrayList<>();
-
-                for (ItemCardapio item : itens) {
-                    if (item.getNome().toLowerCase().contains(busca) ||
-                            item.getCategoria().toString().toLowerCase().contains(busca)) {
-                        filtrados.add(item);
-                    }
-                }
-                popularCards(filtrados);
-            });
+            campoBusca.textProperty().addListener((obs, antes, depois) -> filtrarCards(depois));
 
             editar.setDisable(true);
             remover.setDisable(true);
 
         } catch (ArquivoImportacaoException e) {
-            e.printStackTrace();
             mostrarErro("Erro ao carregar cardápio: " + e.getMessage());
+        }
+    }
+
+    private void filtrarCards(String textoBusca) {
+        if (textoBusca == null || textoBusca.trim().isEmpty()) {
+            popularCards(itens);
+            return;
+        }
+
+        String busca = textoBusca.toLowerCase().trim();
+        List<ItemCardapio> filtrados = new ArrayList<>();
+
+        for (ItemCardapio item : itens) {
+            if (item.getNome().toLowerCase().contains(busca)
+                    || item.getCategoria().toString().toLowerCase().contains(busca)) {
+                filtrados.add(item);
+            }
+        }
+
+        popularCards(filtrados);
+    }
+
+    public void controleDeAcesso() {
+        Usuario usuarioLogado = Sessao.getUsuarioLogado();
+
+        if (usuarioLogado == null) {
+            adicionar.setVisible(false);
+            editar.setVisible(false);
+            remover.setVisible(false);
+            importar.setVisible(false);
+            btnCarrinho.setVisible(false);
+            itens = new ArrayList<>();
+            return;
+        }
+
+        if ("GERENTE".equals(usuarioLogado.getTipo())) {
+            adicionar.setVisible(true);
+            editar.setVisible(true);
+            remover.setVisible(true);
+            importar.setVisible(true);
+            btnCarrinho.setVisible(false);
+            itens = cardapioService.listarTodos();
+        } else {
+            adicionar.setVisible(false);
+            editar.setVisible(false);
+            remover.setVisible(false);
+            importar.setVisible(false);
+            btnCarrinho.setVisible(true);
+            itens = cardapioService.listarDisponiveis();
         }
     }
 
@@ -89,24 +125,7 @@ public class CardapioController {
         imageView.setFitWidth(130);
         imageView.setFitHeight(100);
         imageView.setPreserveRatio(true);
-
-        try {
-            if (item.getCaminhoImagem() == null) {
-                InputStream stream = getClass().getResourceAsStream("/images/placeholder.png");
-                if (stream != null) imageView.setImage(new Image(stream));
-            } else {
-                File imgFile = new File("src/main/resources/images/cardapio/" + item.getCaminhoImagem());
-                if (imgFile.exists()) {
-                    imageView.setImage(new Image(new FileInputStream(imgFile)));
-                } else {
-                    InputStream stream = getClass().getResourceAsStream("/images/placeholder.png");
-                    if (stream != null) imageView.setImage(new Image(stream));
-                }
-            }
-        } catch (FileNotFoundException e) {
-            InputStream stream = getClass().getResourceAsStream("/images/placeholder.png");
-            if (stream != null) imageView.setImage(new Image(stream));
-        }
+        carregarImagemItem(item, imageView);
 
         Label labelNome = new Label(item.getNome());
         labelNome.setStyle("-fx-font-weight: bold; -fx-font-size: 13px;");
@@ -129,39 +148,11 @@ public class CardapioController {
 
         Usuario usuarioLogado = Sessao.getUsuarioLogado();
 
-        if ("GERENTE".equals(usuarioLogado.getTipo())) {
-
-            card.setOnMouseClicked(e -> {
-                if (cardSelecionadoVisual != null) {
-                    cardSelecionadoVisual.setStyle(estiloCardNormal());
-                }
-                itemSelecionado = item;
-                cardSelecionadoVisual = card;
-                card.setStyle(estiloCardSelecionado());
-
-                editar.setDisable(false);
-                remover.setDisable(false);
-
-                if (e.getClickCount() == 2) {
-                    abrirFormulario(item, "Editar Item");
-                }
-            });
-
-            Button remover = new Button("Remover");
-            remover.setStyle(
-                    "-fx-background-color: #e74c3c;" +
-                            "-fx-text-fill: white;" +
-                            "-fx-background-radius: 4px;" +
-                            "-fx-font-size: 11px;" +
-                            "-fx-cursor: hand;"
-            );
-
-            remover.setOnAction(e -> confirmarRemocao(item));
-            card.getChildren().add(remover);
-
+        if (usuarioLogado != null && "GERENTE".equals(usuarioLogado.getTipo())) {
+            configurarCardGerente(card, item);
         } else {
-            Button btnCarrinho = new Button("+ Carrinho");
-            btnCarrinho.setStyle(
+            Button botaoCarrinho = new Button("+ Carrinho");
+            botaoCarrinho.setStyle(
                     "-fx-background-color: #27ae60;" +
                             "-fx-text-fill: white;" +
                             "-fx-background-radius: 4px;" +
@@ -169,8 +160,8 @@ public class CardapioController {
                             "-fx-cursor: hand;"
             );
 
-            btnCarrinho.setOnAction(e -> adicionarAoCarrinho(item));
-            card.getChildren().add(btnCarrinho);
+            botaoCarrinho.setOnAction(e -> adicionarAoCarrinho(item));
+            card.getChildren().add(botaoCarrinho);
         }
 
         card.setOnMouseEntered(e -> {
@@ -188,6 +179,60 @@ public class CardapioController {
         return card;
     }
 
+    private void configurarCardGerente(VBox card, ItemCardapio item) {
+        card.setOnMouseClicked(e -> {
+            if (cardSelecionadoVisual != null) {
+                cardSelecionadoVisual.setStyle(estiloCardNormal());
+            }
+
+            itemSelecionado = item;
+            cardSelecionadoVisual = card;
+            card.setStyle(estiloCardSelecionado());
+
+            editar.setDisable(false);
+            remover.setDisable(false);
+
+            if (e.getClickCount() == 2) {
+                abrirFormulario(item, "Editar Item");
+            }
+        });
+
+        Button botaoRemover = new Button("Remover");
+        botaoRemover.setStyle(
+                "-fx-background-color: #e74c3c;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-background-radius: 4px;" +
+                        "-fx-font-size: 11px;" +
+                        "-fx-cursor: hand;"
+        );
+
+        botaoRemover.setOnAction(e -> confirmarRemocao(item));
+        card.getChildren().add(botaoRemover);
+    }
+
+    private void carregarImagemItem(ItemCardapio item, ImageView imageView) {
+        try {
+            Image imagem;
+
+            if (item.getCaminhoImagem() == null || item.getCaminhoImagem().isBlank()) {
+                imagem = new Image(getClass().getResourceAsStream("/images/placeholder.png"));
+            } else {
+                File arquivo = new File("src/main/resources/images/cardapio", item.getCaminhoImagem());
+
+                if (arquivo.exists()) {
+                    imagem = new Image(arquivo.toURI().toString());
+                } else {
+                    imagem = new Image(getClass().getResourceAsStream("/images/placeholder.png"));
+                }
+            }
+
+            imageView.setImage(imagem);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void popularCards(List<ItemCardapio> lista) {
         painelCards.getChildren().clear();
         itemSelecionado = null;
@@ -203,39 +248,47 @@ public class CardapioController {
         }
 
         for (ItemCardapio item : lista) {
-            VBox card = criarCard(item);
-            painelCards.getChildren().add(card);
+            painelCards.getChildren().add(criarCard(item));
         }
     }
 
     public void adicionarAoCarrinho(ItemCardapio item) {
-        System.out.println("Adicionado ao carrinho: " + item.getNome());
+        carrinhoService.adicionarItem(item);
         mostrarSucesso(item.getNome() + " adicionado ao carrinho!");
     }
 
-    public void controleDeAcesso() {
-        Usuario usuarioLogado = Sessao.getUsuarioLogado();
+    @FXML
+    public void irParaCarrinho() {
+        trocarTela("/fxml/Carrinho.fxml", "Carrinho");
+    }
 
-        if (usuarioLogado == null) {
-            adicionar.setVisible(false);
-            editar.setVisible(false);
-            remover.setVisible(false);
-            importar.setVisible(false);
-            itens = new ArrayList<>();
-            return;
-        }
-        if ("GERENTE".equals(usuarioLogado.getTipo())) {
-            itens = cardapioView.listarTodos();
-            adicionar.setVisible(true);
-            editar.setVisible(true);
-            remover.setVisible(true);
-            importar.setVisible(true);
+    @FXML
+    public void irParaHistorico() {
+        trocarTela("/fxml/HistoricoCliente.fxml", "Histórico");
+    }
+
+    @FXML
+    public void sair() {
+        Usuario usuarioLogado = Sessao.getUsuarioLogado();
+        if (usuarioLogado != null && "GERENTE".equals(usuarioLogado.getTipo())) {
+            trocarTela("/fxml/PainelGerente.fxml", "Painel do Gerente");
         } else {
-            itens = cardapioView.listarDisponiveis();
-            adicionar.setVisible(false);
-            editar.setVisible(false);
-            remover.setVisible(false);
-            importar.setVisible(false);
+            Sessao.encerrar();
+            trocarTela("/fxml/Login.fxml", "Login");
+        }
+    }
+
+    private void trocarTela(String fxml, String titulo) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+            Stage stage = (Stage) painelCards.getScene().getWindow();
+            stage.setScene(new Scene(root, 900, 600));
+            stage.setTitle(titulo);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarErro("Erro ao abrir tela: " + titulo);
         }
     }
 
@@ -246,12 +299,13 @@ public class CardapioController {
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Arquivo JSON", "*.json")
         );
+
         Stage stage = (Stage) importar.getScene().getWindow();
         File arquivo = fileChooser.showOpenDialog(stage);
 
         if (arquivo != null) {
             try {
-                cardapioView.importarDeArquivo(arquivo);
+                cardapioService.importarDeArquivo(arquivo);
                 atualizarCards();
                 mostrarSucesso("Cardápio importado com sucesso!");
             } catch (ArquivoImportacaoException e) {
@@ -271,6 +325,7 @@ public class CardapioController {
             mostrarAviso("Selecione um item para editar.");
             return;
         }
+
         abrirFormulario(itemSelecionado, "Editar Item");
     }
 
@@ -280,7 +335,7 @@ public class CardapioController {
             Parent root = loader.load();
 
             ItemFormController controller = loader.getController();
-            controller.setCardapioService(this.cardapioView);
+            controller.setCardapioService(this.cardapioService);
 
             if (item != null) {
                 controller.preencherParaEdicao(item);
@@ -307,6 +362,7 @@ public class CardapioController {
             mostrarAviso("Selecione um item para remover.");
             return;
         }
+
         confirmarRemocao(itemSelecionado);
     }
 
@@ -320,7 +376,7 @@ public class CardapioController {
 
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             try {
-                cardapioView.removerItem(item.getId());
+                cardapioService.removerItem(item.getId());
                 atualizarCards();
             } catch (ItemNaoEncontradoException | ArquivoImportacaoException e) {
                 mostrarErro("Erro ao remover item: " + e.getMessage());

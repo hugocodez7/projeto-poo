@@ -6,5 +6,4 @@ public enum Categoria {
     SOBREMESA,
     PRATO_PRINCIPAL,
     ACOMPANHAMENTO
-
 }

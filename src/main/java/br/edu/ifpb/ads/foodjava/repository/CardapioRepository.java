@@ -6,18 +6,18 @@ import br.edu.ifpb.ads.foodjava.util.GsonUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+Vai salvar e carregar os itens do cardapio em JSON.
+Quando o gerente adiciona, edita ou remove um item, a lista é atualizada e salva novamente
+*/
+
 public class CardapioRepository implements Persistivel<ItemCardapio> {
-
-    private static final String CAMINHO = "src/main/resources/data/cardapio.json";
-
+    private static final String CAMINHO = "data/cardapio.json";
     private final Gson gson = GsonUtil.getInstancia();
 
     @Override
@@ -29,9 +29,9 @@ public class CardapioRepository implements Persistivel<ItemCardapio> {
             pasta.mkdirs();
         }
 
-        try (FileWriter escritor = new FileWriter(arquivo)) {
-            GsonUtil.getInstancia().toJson(lista, escritor);
-        } catch (Exception e) {
+        try (FileWriter guardarArquivo = new FileWriter(arquivo)) {
+            gson.toJson(lista, guardarArquivo);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -40,21 +40,24 @@ public class CardapioRepository implements Persistivel<ItemCardapio> {
     public List<ItemCardapio> carregar() throws ArquivoImportacaoException {
         File arquivo = new File(CAMINHO);
 
-        try (FileReader leitor = new FileReader(arquivo)) {
+        if (!arquivo.exists()) {
+            return new ArrayList<>();
+        }
+
+        try (FileReader lerArquivo = new FileReader(arquivo)) {
             Type tipo = new TypeToken<List<ItemCardapio>>() {}.getType();
-            List<ItemCardapio> lista = GsonUtil.getInstancia().fromJson(leitor, tipo);
+
+            List<ItemCardapio> lista = gson.fromJson(lerArquivo, tipo);
 
             if (lista == null) {
                 return new ArrayList<>();
             }
+
             return lista;
 
-        } catch (FileNotFoundException e) {
-            return new ArrayList<>();
         } catch (JsonSyntaxException e) {
-            e.printStackTrace();
             throw new ArquivoImportacaoException("cardapio.json", e);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return new ArrayList<>();
         }

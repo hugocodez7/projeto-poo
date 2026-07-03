@@ -1,23 +1,22 @@
 package br.edu.ifpb.ads.foodjava.model;
 
 public class Cliente extends Usuario {
+
     private String cpf;
     private String endereco;
 
-    @Override
-    public String getTipoPerfil() {
-        return "CLIENTE";
-    }
-
     public Cliente() {
-
     }
 
     public Cliente(long id, String nome, String email, String senha, String telefone, String cpf, String endereco) {
         super(id, nome, email, senha, telefone);
         this.cpf = cpf;
         this.endereco = endereco;
-        setTipo(getTipoPerfil());
+    }
+
+    @Override
+    public String getTipoPerfil() {
+        return "CLIENTE";
     }
 
     public String getCpf() {
