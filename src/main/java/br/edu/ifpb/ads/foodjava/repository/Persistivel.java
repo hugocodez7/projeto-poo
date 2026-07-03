@@ -1,11 +1,17 @@
 package br.edu.ifpb.ads.foodjava.repository;
+
 import br.edu.ifpb.ads.foodjava.exception.ArquivoImportacaoException;
 
 import java.util.List;
 
+/*
+Nesse Persistivel que construimos, vai definir um padrão para os repositorios.
+Toda classe que implementa Persistivel precisa ter os metodos salvar e carregar
+ */
+
 public interface Persistivel<T> {
 
-    public void salvar(List<T> list);
-    public List<T> carregar() throws ArquivoImportacaoException;
+    void salvar(List<T> lista);
 
+    List<T> carregar() throws ArquivoImportacaoException;
 }

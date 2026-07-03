@@ -1,57 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ifpb.ads.foodjava.controller.ConfiguracaoInicialController">
-   <children>
-      <Label layoutX="345.0" layoutY="53.0" text="Configuração do restaurante" />
-      <Label layoutX="67.0" layoutY="108.0" text="Nome:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <TextField fx:id="txNome" layoutX="148.0" layoutY="106.0" />
-      <Label layoutX="66.0" layoutY="234.0" text="CNPJ:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <TextField fx:id="txCnpj" layoutX="148.0" layoutY="232.0" />
-      <Label layoutX="67.0" layoutY="148.0" text="Endereço:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <TextField fx:id="txEndereco" layoutX="148.0" layoutY="146.0" />
-      <Label layoutX="67.0" layoutY="280.0" text="Telefone:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <TextField fx:id="txTelefone" layoutX="148.0" layoutY="278.0" />
-      <Label layoutX="66.0" layoutY="192.0" text="Categoria:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <TextField fx:id="txCategoria" layoutX="148.0" layoutY="191.0" />
-      <Label layoutX="431.0" layoutY="108.0" text="Email:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <TextField fx:id="txEmail" layoutX="497.0" layoutY="106.0" />
-      <Label layoutX="431.0" layoutY="159.0" text="Senha:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <PasswordField fx:id="txSenha" layoutX="497.0" layoutY="159.0" />
-      <Button fx:id="btnSalvar" layoutX="546.0" layoutY="213.0" mnemonicParsing="false" onAction="#salvar" text="Salvar" />
-   </children>
-</AnchorPane>
+<StackPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="br.edu.ifpb.ads.foodjava.controller.ConfiguracaoInicialController">
+    <VBox alignment="CENTER" maxWidth="320.0" spacing="10.0">
+        <Label text="Configuração do Restaurante">
+            <font>
+                <Font size="20.0"/>
+            </font>
+        </Label>
+        <Label text="Nome:"/>
+        <TextField fx:id="txNome" promptText="Nome do restaurante" maxWidth="300.0"/>
+        <Label text="CNPJ:"/>
+        <TextField fx:id="txCnpj" promptText="00.000.000/0000-00" maxWidth="300.0"/>
+        <Label text="Endereço:"/>
+        <TextField fx:id="txEndereco" promptText="Endereço completo" maxWidth="300.0"/>
+        <Label text="Telefone:"/>
+        <TextField fx:id="txTelefone" promptText="Telefone" maxWidth="300.0"/>
+        <Label text="Categoria Culinária:"/>
+        <TextField fx:id="txCategoria" promptText="Ex: Nordestina" maxWidth="300.0"/>
+        <Label text="E-mail do Gerente:"/>
+        <TextField fx:id="txEmail" promptText="E-mail" maxWidth="300.0"/>
+        <Label text="Senha do Gerente:"/>
+        <PasswordField fx:id="txSenha" promptText="Mínimo 8 caracteres e um número" maxWidth="300.0"/>
+        <Button fx:id="btnSalvar" text="Salvar" onAction="#salvar" prefWidth="220.0"/>
+    </VBox>
+</StackPane>

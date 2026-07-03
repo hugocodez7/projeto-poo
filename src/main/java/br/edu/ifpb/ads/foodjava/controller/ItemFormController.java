@@ -3,7 +3,7 @@ package br.edu.ifpb.ads.foodjava.controller;
 import br.edu.ifpb.ads.foodjava.exception.ItemNaoEncontradoException;
 import br.edu.ifpb.ads.foodjava.model.Categoria;
 import br.edu.ifpb.ads.foodjava.model.ItemCardapio;
-import br.edu.ifpb.ads.foodjava.view.CardapioView;
+import br.edu.ifpb.ads.foodjava.service.CardapioService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -30,47 +30,36 @@ public class ItemFormController {
     @FXML
     private CheckBox disponivel;
     @FXML
-    private Button salvar;
-    @FXML
-    private Button cancelar;
-    @FXML
     private ImageView imagem;
+    @FXML
+    private Button salvar;
     @FXML
     private Button escolherImagem;
 
-    private CardapioView cardapioService;
+    private CardapioService cardapioService;
     private ItemCardapio itemEditando;
     private String caminhoImagemSelecionada;
 
     @FXML
     public void initialize() {
-        try {
-
-            categoria.setItems(FXCollections.observableArrayList(Categoria.values()));
-            disponivel.setSelected(true);
-
-            carregarImagem(null);
-
-        } catch (Exception e) {
-            mostrarErro("Erro ao carregar serviço do cardápio: " + e.getMessage());
-        }
+        categoria.setItems(FXCollections.observableArrayList(Categoria.values()));
+        disponivel.setSelected(true);
+        carregarImagem(null);
     }
 
-    public void setCardapioService(CardapioView cardapioService) {
+    public void setCardapioService(CardapioService cardapioService) {
         this.cardapioService = cardapioService;
     }
 
     public void preencherParaEdicao(ItemCardapio item) {
-        this.itemEditando = item;
-        this.caminhoImagemSelecionada = item.getCaminhoImagem();
-
+        itemEditando = item;
+        caminhoImagemSelecionada = item.getCaminhoImagem();
         nome.setText(item.getNome());
         descricao.setText(item.getDescricao());
         campoPreco.setText(String.valueOf(item.getPreco()));
         categoria.setValue(item.getCategoria());
         disponivel.setSelected(item.isDisponivel());
-
-        carregarImagem(item.getCaminhoImagem());
+        carregarImagem(caminhoImagemSelecionada);
     }
 
     @FXML
@@ -80,18 +69,8 @@ public class ItemFormController {
         String precoDigitado = campoPreco.getText().trim();
         Categoria categoriaSelecionada = categoria.getValue();
 
-        if (nomeDigitado.isEmpty()) {
-            mostrarErro("O nome não pode estar vazio.");
-            return;
-        }
-
-        if (precoDigitado.isEmpty()) {
-            mostrarErro("O preço não pode estar vazio.");
-            return;
-        }
-
-        if (categoriaSelecionada == null) {
-            mostrarErro("Selecione uma categoria.");
+        if (nomeDigitado.isEmpty() || precoDigitado.isEmpty() || categoriaSelecionada == null) {
+            mostrarErro("Preencha nome, preço e categoria.");
             return;
         }
 
@@ -112,14 +91,7 @@ public class ItemFormController {
 
         try {
             if (itemEditando == null) {
-                ItemCardapio novoItem = new ItemCardapio(
-                        null,
-                        nomeDigitado,
-                        descricaoDigitada,
-                        caminhoImagemSelecionada,
-                        preco,
-                        categoriaSelecionada,
-                        disponivel.isSelected()
+                ItemCardapio novoItem = new ItemCardapio(null, nomeDigitado, descricaoDigitada, caminhoImagemSelecionada, preco, categoriaSelecionada, disponivel.isSelected()
                 );
 
                 cardapioService.adicionarItem(novoItem);
@@ -131,14 +103,16 @@ public class ItemFormController {
                 itemEditando.setPreco(preco);
                 itemEditando.setCategoria(categoriaSelecionada);
                 itemEditando.setDisponivel(disponivel.isSelected());
-
                 cardapioService.editarItem(itemEditando);
             }
 
             fecharJanela();
 
         } catch (ItemNaoEncontradoException e) {
-            mostrarErro("Erro ao salvar item: " + e.getMessage());
+            mostrarErro("Item não encontrado.");
+        } catch (Exception e) {
+            mostrarErro("Erro ao salvar item.");
+            e.printStackTrace();
         }
     }
 
@@ -151,16 +125,13 @@ public class ItemFormController {
     public void escolherImagem() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Escolher imagem do item");
-
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Imagens", "*.jpg", "*.jpeg", "*.png")
-        );
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Imagens", "*.jpg", "*.jpeg", "*.png"));
 
         Stage stage = (Stage) escolherImagem.getScene().getWindow();
-        File arquivoEscolhido = fileChooser.showOpenDialog(stage);
+        File arquivo = fileChooser.showOpenDialog(stage);
 
-        if (arquivoEscolhido != null) {
-            copiarImagem(arquivoEscolhido);
+        if (arquivo != null) {
+            copiarImagem(arquivo);
         }
     }
 
@@ -178,10 +149,7 @@ public class ItemFormController {
 
             File arquivoDestino = new File(pastaDestino, nomeUnico);
 
-            Files.copy(
-                    arquivoOrigem.toPath(),
-                    arquivoDestino.toPath(),
-                    StandardCopyOption.REPLACE_EXISTING
+            Files.copy(arquivoOrigem.toPath(), arquivoDestino.toPath(), StandardCopyOption.REPLACE_EXISTING
             );
 
             caminhoImagemSelecionada = nomeUnico;
@@ -198,14 +166,14 @@ public class ItemFormController {
             Image img;
 
             if (nomeArquivo == null || nomeArquivo.isBlank()) {
-                img = new Image(getClass().getResourceAsStream("src/main/resources/images/placeholder.png"));
+                img = new Image(getClass().getResourceAsStream("/images/placeholder.png"));
             } else {
-                File arquivo = new File("src/main/images/resources/cardapio", nomeArquivo);
+                File arquivo = new File("src/main/resources/images/cardapio", nomeArquivo);
 
                 if (arquivo.exists()) {
                     img = new Image(arquivo.toURI().toString());
                 } else {
-                    img = new Image(getClass().getResourceAsStream("src/main/resources/images/placeholder.png"));
+                    img = new Image(getClass().getResourceAsStream("/images/placeholder.png"));
                 }
             }
 
@@ -215,7 +183,6 @@ public class ItemFormController {
             imagem.setFitHeight(140);
 
         } catch (Exception e) {
-            mostrarErro("Erro ao carregar imagem.");
             e.printStackTrace();
         }
     }
@@ -227,7 +194,7 @@ public class ItemFormController {
 
     private void mostrarErro(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erro de validação");
+        alert.setTitle("Erro");
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();

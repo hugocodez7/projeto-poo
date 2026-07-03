@@ -33,3 +33,9 @@ target/
 # Sistema operacional
 .DS_Store
 Thumbs.db
+
+# Dados gerados em runtime
+src/main/resources/data/
+
+#Jsons em runtime
+data/

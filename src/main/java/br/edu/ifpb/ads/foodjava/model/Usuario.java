@@ -1,17 +1,14 @@
 package br.edu.ifpb.ads.foodjava.model;
 
 public abstract class Usuario {
+
     private long id;
     private String nome;
     private String email;
     private String senha;
     private String telefone;
-    private String tipo;
-
-    public abstract String getTipoPerfil();
 
     public Usuario() {
-
     }
 
     public Usuario(long id, String nome, String email, String senha, String telefone) {
@@ -20,6 +17,12 @@ public abstract class Usuario {
         this.email = email;
         this.senha = senha;
         this.telefone = telefone;
+    }
+
+    public abstract String getTipoPerfil();
+
+    public String getTipo() {
+        return getTipoPerfil();
     }
 
     public long getId() {
@@ -60,13 +63,5 @@ public abstract class Usuario {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
     }
 }

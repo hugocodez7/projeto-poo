@@ -1,6 +1,7 @@
 package br.edu.ifpb.ads.foodjava.model;
 
 public class Restaurante {
+
     private String nome;
     private String cnpj;
     private String endereco;
@@ -10,10 +11,10 @@ public class Restaurante {
     private String logo;
 
     public Restaurante() {
-
     }
 
-    public Restaurante(String nome, String cnpj, String endereco, String telefone, String categoriaCulinaria, String email, String logo) {
+    public Restaurante(String nome, String cnpj, String endereco, String telefone,
+                       String categoriaCulinaria, String email, String logo) {
         this.nome = nome;
         this.cnpj = cnpj;
         this.endereco = endereco;
@@ -22,7 +23,6 @@ public class Restaurante {
         this.email = email;
         this.logo = logo;
     }
-
 
     public String getNome() {
         return nome;

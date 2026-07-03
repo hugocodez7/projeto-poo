@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="br.edu.ifpb.ads.foodjava.controller.CardapioController" prefHeight="600.0" prefWidth="900.0">
+    <top>
+        <ToolBar prefHeight="50.0">
+            <items>
+                <TextField fx:id="campoBusca" promptText="Buscar item..." prefWidth="200.0"/>
+                <Button fx:id="adicionar" text="Adicionar" onAction="#abrirFormularioAdicionar"/>
+                <Button fx:id="editar" text="Editar" onAction="#abrirFormularioEditar"/>
+                <Button fx:id="remover" text="Remover" onAction="#removerItem"/>
+                <Button fx:id="importar" text="Importar JSON" onAction="#importarCardapio"/>
+                <Pane prefWidth="40.0"/>
+                <Button fx:id="btnCarrinho" text="Carrinho" onAction="#irParaCarrinho"/>
+                <Button text="Histórico" onAction="#irParaHistorico"/>
+                <Button text="Sair" onAction="#sair"/>
+            </items>
+        </ToolBar>
+    </top>
+    <center>
+        <StackPane>
+            <ScrollPane fitToWidth="true" maxWidth="820.0" prefViewportHeight="520.0">
+                <content>
+                    <FlowPane fx:id="painelCards" hgap="16.0" vgap="16.0" prefWrapLength="760.0">
+                        <padding>
+                            <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
+                        </padding>
+                    </FlowPane>
+                </content>
+            </ScrollPane>
+        </StackPane>
+    </center>
+</BorderPane>

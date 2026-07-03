@@ -6,10 +6,17 @@ public class ItemPedido {
     private int quantidade;
     private double precoUnidade;
 
-    public ItemPedido (String nome, int quantidade, double precoUnidade) {
+    public ItemPedido() {
+    }
+
+    public ItemPedido(String nome, int quantidade, double precoUnidade) {
         this.nome = nome;
         this.quantidade = quantidade;
         this.precoUnidade = precoUnidade;
+    }
+
+    public void aumentarQuantidade() {
+        quantidade++;
     }
 
     public String getNome() {
@@ -24,8 +31,7 @@ public class ItemPedido {
         return precoUnidade;
     }
 
-    public double getSubtotal(){
+    public double getSubtotal() {
         return quantidade * precoUnidade;
     }
-
 }

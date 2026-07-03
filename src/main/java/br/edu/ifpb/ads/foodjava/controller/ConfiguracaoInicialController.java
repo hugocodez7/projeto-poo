@@ -6,6 +6,7 @@ import br.edu.ifpb.ads.foodjava.repository.GerenteRepository;
 import br.edu.ifpb.ads.foodjava.repository.RestauranteRepository;
 import br.edu.ifpb.ads.foodjava.util.ValidadorDocumento;
 import br.edu.ifpb.ads.foodjava.util.ValidadorSenha;
+import br.edu.ifpb.ads.foodjava.util.ValidadorTelefone;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,6 +29,7 @@ public class ConfiguracaoInicialController {
     @FXML private Button btnSalvar;
 
     private final RestauranteRepository restauranteRepository = new RestauranteRepository();
+    private final GerenteRepository gerenteRepository = new GerenteRepository();
 
     @FXML
     public void salvar() {
@@ -51,33 +53,39 @@ public class ConfiguracaoInicialController {
             return;
         }
 
+        if (!ValidadorTelefone.validar(telefone)) {
+            mostrarErro("Telefone inválido.");
+            return;
+        }
+
         if (!ValidadorSenha.validar(senha)) {
             mostrarErro("Senha deve ter ao menos 8 caracteres e um número.");
             return;
         }
 
-
         Restaurante restaurante = new Restaurante(nome, cnpj, endereco, telefone, categoria, email, null);
         restauranteRepository.salvar(restaurante);
-
-        GerenteRepository gerenteRepository = new GerenteRepository();
         Gerente gerente = new Gerente(1L, nome, email, senha, telefone);
-        List<Gerente> lista = new ArrayList<>();
-        lista.add(gerente);
-        gerenteRepository.salvar(lista);
+        List<Gerente> gerentes = new ArrayList<>();
+        gerentes.add(gerente);
+        gerenteRepository.salvar(gerentes);
 
         mostrarSucesso("Restaurante configurado com sucesso!");
-        irParaLogin();
+        trocarTela("/fxml/Login.fxml", "Login");
     }
 
-    private void irParaLogin() {
+    private void trocarTela(String caminhoFXML, String titulo) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(caminhoFXML));
             Parent root = loader.load();
             Stage stage = (Stage) btnSalvar.getScene().getWindow();
             stage.setScene(new Scene(root, 900, 600));
+            stage.setTitle(titulo);
+            stage.show();
+
         } catch (Exception e) {
             e.printStackTrace();
+            mostrarErro("Erro ao abrir tela: " + caminhoFXML);
         }
     }
 
@@ -92,8 +100,8 @@ public class ConfiguracaoInicialController {
     private void mostrarSucesso(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sucesso");
-        alert.setHeaderText(null);alert.setContentText(mensagem);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
         alert.showAndWait();
-
     }
 }
