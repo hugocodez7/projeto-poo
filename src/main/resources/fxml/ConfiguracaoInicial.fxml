@@ -1,30 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+<StackPane prefHeight="600.0" prefWidth="900.0"
+           xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
            fx:controller="br.edu.ifpb.ads.foodjava.controller.ConfiguracaoInicialController">
-    <VBox alignment="CENTER" maxWidth="320.0" spacing="10.0">
-        <Label text="Configuração do Restaurante">
-            <font>
-                <Font size="20.0"/>
-            </font>
-        </Label>
-        <Label text="Nome:"/>
-        <TextField fx:id="txNome" promptText="Nome do restaurante" maxWidth="300.0"/>
-        <Label text="CNPJ:"/>
-        <TextField fx:id="txCnpj" promptText="00.000.000/0000-00" maxWidth="300.0"/>
-        <Label text="Endereço:"/>
-        <TextField fx:id="txEndereco" promptText="Endereço completo" maxWidth="300.0"/>
-        <Label text="Telefone:"/>
-        <TextField fx:id="txTelefone" promptText="Telefone" maxWidth="300.0"/>
-        <Label text="Categoria Culinária:"/>
-        <TextField fx:id="txCategoria" promptText="Ex: Nordestina" maxWidth="300.0"/>
-        <Label text="E-mail do Gerente:"/>
-        <TextField fx:id="txEmail" promptText="E-mail" maxWidth="300.0"/>
-        <Label text="Senha do Gerente:"/>
-        <PasswordField fx:id="txSenha" promptText="Mínimo 8 caracteres e um número" maxWidth="300.0"/>
-        <Button fx:id="btnSalvar" text="Salvar" onAction="#salvar" prefWidth="220.0"/>
-    </VBox>
+
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxWidth="430.0">
+        <content>
+            <VBox alignment="CENTER" maxWidth="360.0" spacing="8.0">
+                <padding>
+                    <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+                </padding>
+
+                <Label text="Configuração do Restaurante">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Label>
+
+                <Label text="Nome:"/>
+                <TextField fx:id="txNome" promptText="Nome do restaurante" maxWidth="320.0"/>
+
+                <Label text="CNPJ:"/>
+                <TextField fx:id="txCnpj" promptText="00.000.000/0000-00" maxWidth="320.0"/>
+
+                <Label text="Endereço:"/>
+                <TextField fx:id="txEndereco" promptText="Endereço completo" maxWidth="320.0"/>
+
+                <Label text="Telefone:"/>
+                <TextField fx:id="txTelefone" promptText="Telefone" maxWidth="320.0"/>
+
+                <Label text="Categoria Culinária:"/>
+                <TextField fx:id="txCategoria" promptText="Ex: Nordestina" maxWidth="320.0"/>
+
+                <Label text="E-mail do Gerente:"/>
+                <TextField fx:id="txEmail" promptText="E-mail" maxWidth="320.0"/>
+
+                <Label text="Senha do Gerente:"/>
+                <PasswordField fx:id="txSenha" promptText="Mínimo 8 caracteres e um número" maxWidth="320.0"/>
+
+                <Label text="Logotipo:"/>
+                <ImageView fx:id="imgLogo"
+                           fitWidth="160.0"
+                           fitHeight="100.0"
+                           preserveRatio="true"/>
+
+                <Button fx:id="btnEscolherLogo"
+                        text="Escolher Logotipo"
+                        onAction="#escolherLogo"
+                        prefWidth="180.0"/>
+
+                <Button fx:id="btnSalvar"
+                        text="Salvar"
+                        onAction="#salvar"
+                        prefWidth="220.0"/>
+            </VBox>
+        </content>
+    </ScrollPane>
 </StackPane>

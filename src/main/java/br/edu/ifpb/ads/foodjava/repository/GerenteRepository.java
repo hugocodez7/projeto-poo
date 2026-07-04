@@ -64,11 +64,23 @@ public class GerenteRepository implements Persistivel<Gerente> {
         }
     }
 
+    public Gerente buscarPorEmail(String email) throws ArquivoImportacaoException {
+        List<Gerente> lista = carregar();
+
+        for (Gerente gerente : lista) {
+            if (gerente.getEmail() != null && gerente.getEmail().equalsIgnoreCase(email)) {
+                return gerente;
+            }
+        }
+
+        return null;
+    }
+
     public Gerente buscarPorEmailESenha(String email, String senha) throws ArquivoImportacaoException {
         List<Gerente> lista = carregar();
 
         for (Gerente gerente : lista) {
-            if (gerente.getEmail().equalsIgnoreCase(email) && gerente.getSenha().equals(senha)) {
+            if (gerente.getEmail() != null && gerente.getSenha() != null && gerente.getEmail().equalsIgnoreCase(email) && gerente.getSenha().equals(senha)) {
                 return gerente;
             }
         }

@@ -5,7 +5,7 @@
       "preco": 12.50,
       "categoria": "ENTRADA",
       "disponivel": true,
-      "imagemPath": "exemplos-json/imagens/caldo_feijao.jpg"
+      "caminhoImagem": "exemplos-json/imagens/caldo_feijao.jpg"
     },
     {
       "nome": "Macaxeira Frita",
@@ -13,7 +13,7 @@
       "preco": 14.00,
       "categoria": "ENTRADA",
       "disponivel": true,
-      "imagemPath": "exemplos-json/imagens/macaxeira_frita.jpg"
+      "caminhoImagem": "exemplos-json/imagens/macaxeira_frita.jpg"
     },
     {
       "nome": "Baião de Dois",
@@ -21,7 +21,7 @@
       "preco": 38.90,
       "categoria": "PRATO_PRINCIPAL",
       "disponivel": true,
-      "imagemPath": "exemplos-json/imagens/baiao_de_dois.jpg"
+      "caminhoImagem": "exemplos-json/imagens/baiao_de_dois.jpg"
     },
     {
       "nome": "Carne de Sol na Chapa",
@@ -29,7 +29,7 @@
       "preco": 45.00,
       "categoria": "PRATO_PRINCIPAL",
       "disponivel": true,
-      "imagemPath": "exemplos-json/imagens/carne_de_sol.jpg"
+      "caminhoImagem": "exemplos-json/imagens/carne_de_sol.jpg"
     },
     {
       "nome": "Frango Assado Caipira",
@@ -37,14 +37,14 @@
       "preco": 42.00,
       "categoria": "PRATO_PRINCIPAL",
       "disponivel": false,
-      "imagemPath": "exemplos-json/imagens/frango_assado.jpg"
+      "caminhoImagem": "exemplos-json/imagens/frango_assado.jpg"
     },
     {
       "nome": "Moqueca de Camarão",
       "descricao": "Camarões frescos cozidos em leite de coco, azeite de dendê, tomate e coentro. Acompanha arroz e pirão.",
       "preco": 62.00,
       "categoria": "PRATO_PRINCIPAL",
-      "disponivel": true
+      "caminhoImagem": true
     },
     {
       "nome": "Mungunzá",
@@ -52,7 +52,7 @@
       "preco": 10.00,
       "categoria": "SOBREMESA",
       "disponivel": true,
-      "imagemPath": "exemplos-json/imagens/munguzza.jpg"
+      "caminhoImagem": "exemplos-json/imagens/munguzza.jpg"
     },
     {
       "nome": "Pudim de Leite Condensado",
@@ -60,7 +60,7 @@
       "preco": 12.00,
       "categoria": "SOBREMESA",
       "disponivel": true,
-      "imagemPath": "exemplos-json/imagens/pudim.jpg"
+      "caminhoImagem": "exemplos-json/imagens/pudim.jpg"
     },
     {
       "nome": "Cartola",
@@ -75,7 +75,7 @@
       "preco": 8.00,
       "categoria": "BEBIDAS",
       "disponivel": true,
-      "imagemPath": "exemplos-json/imagens/suco_umbu.jpg"
+      "caminhoImagem": "exemplos-json/imagens/suco_umbu.jpg"
     },
     {
       "nome": "Suco de Cajá",

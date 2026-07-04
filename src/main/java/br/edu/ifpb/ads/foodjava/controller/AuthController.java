@@ -37,6 +37,10 @@ public class AuthController {
             throw new UsuarioDuplicadoException("E-mail já cadastrado.");
         }
 
+        if (gerenteRepository.buscarPorEmail(email) != null) {
+            throw new UsuarioDuplicadoException("E-mail ou senha já cadastrado.");
+        }
+
         if (clienteRepository.buscarPorCpf(cpf) != null) {
             throw new UsuarioDuplicadoException("CPF já cadastrado.");
         }

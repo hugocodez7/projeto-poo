@@ -3,6 +3,8 @@ package br.edu.ifpb.ads.foodjava.repository;
 import br.edu.ifpb.ads.foodjava.exception.ArquivoImportacaoException;
 import br.edu.ifpb.ads.foodjava.model.Pedido;
 import br.edu.ifpb.ads.foodjava.util.GsonUtil;
+import br.edu.ifpb.ads.foodjava.model.ItemPedido;
+import br.edu.ifpb.ads.foodjava.model.StatusPedido;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -85,5 +87,23 @@ public class PedidoRepository implements Persistivel<Pedido> {
 
     public int getTotalPedidos() throws ArquivoImportacaoException {
         return carregar().size();
+    }
+
+    public boolean existePedidoAbertoComItem(String nomeItem) throws ArquivoImportacaoException {
+        for (Pedido pedido : carregar()) {
+            boolean pedidoFechado = pedido.getStatus() == StatusPedido.ENTREGUE || pedido.getStatus() == StatusPedido.CANCELADO;
+
+            if (pedidoFechado || pedido.getItens() == null) {
+                continue;
+            }
+
+            for (ItemPedido item : pedido.getItens()) {
+                if (item.getNome() != null && item.getNome().equalsIgnoreCase(nomeItem)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

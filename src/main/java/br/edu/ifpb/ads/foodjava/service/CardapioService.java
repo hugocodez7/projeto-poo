@@ -4,6 +4,8 @@ import br.edu.ifpb.ads.foodjava.exception.ArquivoImportacaoException;
 import br.edu.ifpb.ads.foodjava.exception.ItemNaoEncontradoException;
 import br.edu.ifpb.ads.foodjava.model.ItemCardapio;
 import br.edu.ifpb.ads.foodjava.repository.CardapioRepository;
+import br.edu.ifpb.ads.foodjava.exception.ItemVinculadoException;
+import br.edu.ifpb.ads.foodjava.repository.PedidoRepository;
 import br.edu.ifpb.ads.foodjava.util.GsonUtil;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -19,6 +21,7 @@ public class CardapioService {
 
     private final CardapioRepository repository;
     private final List<ItemCardapio> lista;
+    private final PedidoRepository pedidoRepository = new PedidoRepository();
 
     public CardapioService() throws ArquivoImportacaoException {
         this.repository = new CardapioRepository();
@@ -45,8 +48,17 @@ public class CardapioService {
         repository.salvar(lista);
     }
 
-    public void removerItem(String id) throws ItemNaoEncontradoException {
+    public void removerItem(String id)
+            throws ItemNaoEncontradoException, ItemVinculadoException, ArquivoImportacaoException {
+
         ItemCardapio item = buscarPorId(id);
+
+        if (pedidoRepository.existePedidoAbertoComItem(item.getNome())) {
+            throw new ItemVinculadoException(
+                    "Este item está vinculado a um pedido em aberto e não pode ser excluído."
+            );
+        }
+
         lista.remove(item);
         repository.salvar(lista);
     }

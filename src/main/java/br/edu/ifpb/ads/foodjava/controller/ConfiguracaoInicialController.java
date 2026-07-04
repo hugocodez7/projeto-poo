@@ -11,11 +11,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ConfiguracaoInicialController {
 
@@ -27,7 +36,10 @@ public class ConfiguracaoInicialController {
     @FXML private TextField txEmail;
     @FXML private PasswordField txSenha;
     @FXML private Button btnSalvar;
+    @FXML private Button btnEscolherLogo;
+    @FXML private ImageView imgLogo;
 
+    private String logoSelecionada;
     private final RestauranteRepository restauranteRepository = new RestauranteRepository();
     private final GerenteRepository gerenteRepository = new GerenteRepository();
 
@@ -44,27 +56,28 @@ public class ConfiguracaoInicialController {
         if (nome.isEmpty() || cnpj.isEmpty() || endereco.isEmpty()
                 || telefone.isEmpty() || categoria.isEmpty()
                 || email.isEmpty() || senha.isEmpty()) {
-            mostrarErro("Todos os campos são obrigatórios.");
+            mostrarErro("Todos os campos sao obrigatorios.");
             return;
         }
 
         if (!ValidadorDocumento.validarCNPJ(cnpj)) {
-            mostrarErro("CNPJ inválido.");
+            mostrarErro("CNPJ invalido.");
             return;
         }
 
         if (!ValidadorTelefone.validar(telefone)) {
-            mostrarErro("Telefone inválido.");
+            mostrarErro("Telefone invalido.");
             return;
         }
 
         if (!ValidadorSenha.validar(senha)) {
-            mostrarErro("Senha deve ter ao menos 8 caracteres e um número.");
+            mostrarErro("Senha deve ter ao menos 8 caracteres e um numero.");
             return;
         }
 
-        Restaurante restaurante = new Restaurante(nome, cnpj, endereco, telefone, categoria, email, null);
+        Restaurante restaurante = new Restaurante(nome, cnpj, endereco, telefone, categoria, email, logoSelecionada);
         restauranteRepository.salvar(restaurante);
+
         Gerente gerente = new Gerente(1L, nome, email, senha, telefone);
         List<Gerente> gerentes = new ArrayList<>();
         gerentes.add(gerente);
@@ -72,6 +85,72 @@ public class ConfiguracaoInicialController {
 
         mostrarSucesso("Restaurante configurado com sucesso!");
         trocarTela("/fxml/Login.fxml", "Login");
+    }
+
+    @FXML
+    public void escolherLogo() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Escolher logotipo");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Imagens", "*.jpg", "*.jpeg", "*.png")
+        );
+
+        Stage stage = (Stage) btnEscolherLogo.getScene().getWindow();
+        File arquivo = fileChooser.showOpenDialog(stage);
+
+        if (arquivo != null) {
+            copiarLogo(arquivo);
+        }
+    }
+
+    private void copiarLogo(File arquivoOrigem) {
+        try {
+            File pastaDestino = new File("uploads/logos");
+
+            if (!pastaDestino.exists() && !pastaDestino.mkdirs()) {
+                mostrarErro("Erro ao criar pasta de logotipos.");
+                return;
+            }
+
+            String nomeOriginal = arquivoOrigem.getName();
+            String extensao = nomeOriginal.substring(nomeOriginal.lastIndexOf("."));
+            String nomeUnico = UUID.randomUUID() + extensao;
+
+            File arquivoDestino = new File(pastaDestino, nomeUnico);
+
+            Files.copy(
+                    arquivoOrigem.toPath(),
+                    arquivoDestino.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+
+            logoSelecionada = "uploads/logos/" + nomeUnico;
+            carregarLogo(logoSelecionada);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarErro("Erro ao copiar logotipo.");
+        }
+    }
+
+    private void carregarLogo(String caminhoLogo) {
+        try {
+            if (caminhoLogo == null || caminhoLogo.isBlank()) {
+                imgLogo.setImage(null);
+                return;
+            }
+
+            File arquivo = new File(caminhoLogo);
+
+            if (arquivo.exists()) {
+                imgLogo.setImage(new Image(arquivo.toURI().toString()));
+            } else {
+                imgLogo.setImage(null);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void trocarTela(String caminhoFXML, String titulo) {

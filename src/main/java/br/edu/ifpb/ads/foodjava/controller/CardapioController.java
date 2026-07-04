@@ -2,6 +2,7 @@ package br.edu.ifpb.ads.foodjava.controller;
 
 import br.edu.ifpb.ads.foodjava.exception.ArquivoImportacaoException;
 import br.edu.ifpb.ads.foodjava.exception.ItemNaoEncontradoException;
+import br.edu.ifpb.ads.foodjava.exception.ItemVinculadoException;
 import br.edu.ifpb.ads.foodjava.model.ItemCardapio;
 import br.edu.ifpb.ads.foodjava.model.Usuario;
 import br.edu.ifpb.ads.foodjava.service.CarrinhoService;
@@ -57,7 +58,6 @@ public class CardapioController {
             popularCards(itens);
 
             campoBusca.textProperty().addListener((obs, antes, depois) -> filtrarCards(depois));
-
             editar.setDisable(true);
             remover.setDisable(true);
 
@@ -118,7 +118,7 @@ public class CardapioController {
     private VBox criarCard(ItemCardapio item) {
         VBox card = new VBox(8);
         card.setAlignment(Pos.CENTER);
-        card.setPrefWidth(160);
+        card.setPrefWidth(180);
         card.setStyle(estiloCardNormal());
 
         ImageView imageView = new ImageView();
@@ -130,7 +130,13 @@ public class CardapioController {
         Label labelNome = new Label(item.getNome());
         labelNome.setStyle("-fx-font-weight: bold; -fx-font-size: 13px;");
         labelNome.setWrapText(true);
-        labelNome.setMaxWidth(130);
+        labelNome.setMaxWidth(150);
+
+        Label labelDescricao = new Label(item.getDescricao());
+        labelDescricao.setStyle("-fx-text-fill: #555; -fx-font-size: 11px;");
+        labelDescricao.setWrapText(true);
+        labelDescricao.setMaxWidth(150);
+        labelDescricao.setPrefHeight(42);
 
         Label labelPreco = new Label(String.format("R$ %.2f", item.getPreco()));
         labelPreco.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
@@ -144,7 +150,7 @@ public class CardapioController {
                         "-fx-font-size: 11px;"
         );
 
-        card.getChildren().addAll(imageView, labelNome, labelPreco, labelCategoria);
+        card.getChildren().addAll(imageView, labelNome, labelDescricao, labelPreco, labelCategoria);
 
         Usuario usuarioLogado = Sessao.getUsuarioLogado();
 
@@ -217,7 +223,11 @@ public class CardapioController {
             if (item.getCaminhoImagem() == null || item.getCaminhoImagem().isBlank()) {
                 imagem = new Image(getClass().getResourceAsStream("/images/placeholder.png"));
             } else {
-                File arquivo = new File("src/main/resources/images/cardapio", item.getCaminhoImagem());
+                File arquivo = new File(item.getCaminhoImagem());
+
+                if (!arquivo.exists()) {
+                    arquivo = new File("src/main/resources/images/cardapio", item.getCaminhoImagem());
+                }
 
                 if (arquivo.exists()) {
                     imagem = new Image(arquivo.toURI().toString());
@@ -378,6 +388,8 @@ public class CardapioController {
             try {
                 cardapioService.removerItem(item.getId());
                 atualizarCards();
+            } catch (ItemVinculadoException e) {
+                mostrarErro(e.getMessage());
             } catch (ItemNaoEncontradoException | ArquivoImportacaoException e) {
                 mostrarErro("Erro ao remover item: " + e.getMessage());
             }
