@@ -1,0 +1,59 @@
+[
+  {
+    "nome": "Caldo de Feijao",
+    "descricao": "Caldo temperado com linguica calabresa, couve manteiga e bacon. Servido bem quente, acompanhado de torradas.",
+    "preco": 12.50,
+    "categoria": "ENTRADA",
+    "disponivel": true,
+    "caminhoImagem": "exemplos-json/imagens/caldo_feijao.jpg"
+  },
+  {
+    "nome": "",
+    "descricao": "Macaxeira cozida e frita na hora, crocante por fora e macia por dentro. Servida com manteiga de garrafa.",
+    "preco": 14.00,
+    "categoria": "ENTRADA",
+    "disponivel": true,
+    "caminhoImagem": "exemplos-json/imagens/macaxeira_frita.jpg"
+  },
+  {
+    "nome": "Baiao de Dois",
+    "descricao": "",
+    "preco": 38.90,
+    "categoria": "PRATO_PRINCIPAL",
+    "disponivel": true,
+    "caminhoImagem": "exemplos-json/imagens/baiao_de_dois.jpg"
+  },
+  {
+    "nome": "Carne de Sol na Chapa",
+    "descricao": "Carne de sol grelhada na chapa, acompanhada de arroz, feijao, farofa e vinagrete. Porcao individual.",
+    "preco": 0,
+    "categoria": "PRATO_PRINCIPAL",
+    "disponivel": true,
+    "caminhoImagem": "exemplos-json/imagens/carne_de_sol.jpg"
+  },
+  {
+    "nome": "Frango Assado Caipira",
+    "descricao": "Frango caipira assado com ervas finas, alho e limao. Acompanha arroz, feijao e salada.",
+    "preco": 42.00,
+    "categoria": "LANCHE",
+    "disponivel": false,
+    "caminhoImagem": "exemplos-json/imagens/frango_assado.jpg"
+  },
+  null,
+  {
+    "nome": "Moqueca de Camarao",
+    "descricao": "Camaroes frescos cozidos em leite de coco, azeite de dende, tomate e coentro. Acompanha arroz e pirao.",
+    "preco": -62.00,
+    "categoria": "PRATO_PRINCIPAL",
+    "disponivel": true,
+    "caminhoImagem": "exemplos-json/imagens/moqueca_camarao.jpg"
+  },
+  {
+    "nome": "Suco de Umbu",
+    "descricao": "Suco natural de umbu, fruta tipica do sertao nordestino. Gelado, sem adicao de corantes. 500ml.",
+    "preco": 8.00,
+    "categoria": "BEBIDAS",
+    "disponivel": true,
+    "caminhoImagem": "exemplos-json/imagens/suco_umbu.jpg"
+  }
+]
