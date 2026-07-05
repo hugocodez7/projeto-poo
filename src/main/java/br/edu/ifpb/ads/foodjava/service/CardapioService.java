@@ -63,25 +63,66 @@ public class CardapioService {
         repository.salvar(lista);
     }
 
-    public void importarDeArquivo(File arquivo) throws ArquivoImportacaoException {
+    private List<String> validarItemImportado(ItemCardapio item) {
+        List<String> erros = new ArrayList<>();
+
+        if (item == null) {
+            erros.add("item vazio");
+            return erros;
+        }
+
+        if (item.getNome() == null || item.getNome().isBlank()) {
+            erros.add("nome obrigatório");
+        }
+
+        if (item.getDescricao() == null || item.getDescricao().isBlank()) {
+            erros.add("descrição obrigatória");
+        }
+
+        if (item.getPreco() <= 0) {
+            erros.add("preço deve ser maior que zero");
+        }
+
+        if (item.getCategoria() == null) {
+            erros.add("categoria inválida ou ausente");
+        }
+
+        return erros;
+    }
+
+    public ResultadoImportacao importarDeArquivo(File arquivo) throws ArquivoImportacaoException {
+        ResultadoImportacao resultado = new ResultadoImportacao();
+
         try (FileReader leitor = new FileReader(arquivo)) {
             Type tipo = new TypeToken<List<ItemCardapio>>() {}.getType();
-
             List<ItemCardapio> itensImportados = GsonUtil.getInstancia().fromJson(leitor, tipo);
 
             if (itensImportados == null || itensImportados.isEmpty()) {
-                throw new ArquivoImportacaoException("O arquivo está vazio ou sem itens válidos.");
+                resultado.adicionarErro("O arquivo está vazio ou sem itens.");
+                return resultado;
             }
 
-            for (ItemCardapio item : itensImportados) {
-                item.setId(UUID.randomUUID().toString());
-                lista.add(item);
+            for (int i = 0; i < itensImportados.size(); i++) {
+                ItemCardapio item = itensImportados.get(i);
+                List<String> errosItem = validarItemImportado(item);
+
+                if (errosItem.isEmpty()) {
+                    item.setId(UUID.randomUUID().toString());
+                    lista.add(item);
+                    resultado.adicionarImportado();
+                } else {
+                    resultado.adicionarErro("Item " + (i + 1) + ": " + String.join(", ", errosItem));
+                }
             }
 
-            repository.salvar(lista);
+            if (resultado.getImportados() > 0) {
+                repository.salvar(lista);
+            }
+
+            return resultado;
 
         } catch (JsonSyntaxException e) {
-            throw new ArquivoImportacaoException("Arquivo JSON inválido ou corrompido.");
+            throw new ArquivoImportacaoException("Arquivo JSON inválido ou corrompido: " + e.getMessage());
 
         } catch (IOException e) {
             throw new ArquivoImportacaoException("Erro ao ler o arquivo.");

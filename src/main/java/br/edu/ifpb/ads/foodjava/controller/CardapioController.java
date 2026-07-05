@@ -20,7 +20,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
+import br.edu.ifpb.ads.foodjava.service.ResultadoImportacao;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -306,8 +306,7 @@ public class CardapioController {
     public void importarCardapio() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Importar Cardápio");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Arquivo JSON", "*.json")
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivo JSON", "*.json")
         );
 
         Stage stage = (Stage) importar.getScene().getWindow();
@@ -315,9 +314,9 @@ public class CardapioController {
 
         if (arquivo != null) {
             try {
-                cardapioService.importarDeArquivo(arquivo);
+                ResultadoImportacao resultado = cardapioService.importarDeArquivo(arquivo);
                 atualizarCards();
-                mostrarSucesso("Cardápio importado com sucesso!");
+                mostrarRelatorioImportacao(resultado);
             } catch (ArquivoImportacaoException e) {
                 mostrarErro("Erro ao importar: " + e.getMessage());
             }
@@ -451,6 +450,23 @@ public class CardapioController {
         alert.setTitle("Aviso");
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
+        alert.showAndWait();
+    }
+
+    private void mostrarRelatorioImportacao(ResultadoImportacao resultado) {
+        Alert alert = new Alert(resultado.temErros() ? Alert.AlertType.WARNING : Alert.AlertType.INFORMATION
+        );
+
+        alert.setTitle("Relatório de Importação");
+        alert.setHeaderText("Importação concluída");
+
+        TextArea areaTexto = new TextArea(resultado.gerarRelatorio());
+        areaTexto.setEditable(false);
+        areaTexto.setWrapText(true);
+        areaTexto.setPrefWidth(500);
+        areaTexto.setPrefHeight(300);
+
+        alert.getDialogPane().setContent(areaTexto);
         alert.showAndWait();
     }
 }
